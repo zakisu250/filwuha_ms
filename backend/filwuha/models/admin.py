@@ -4,9 +4,9 @@ from datetime import datetime
 from filwuha.models import db
 
 class Admin(db.Model, UserMixin):
-    __tablename__ = 'admin'
+    __tablename__ = 'admins'
 
-    admin_id = db.Column(db.Integer, primary_key=True)
+    admin_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -15,5 +15,5 @@ class Admin(db.Model, UserMixin):
         self.username = username
         self.password_hash = generate_password_hash(password)
 
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+    # def check_password(self, password):
+    #     return check_password_hash(self.password_hash, password)
