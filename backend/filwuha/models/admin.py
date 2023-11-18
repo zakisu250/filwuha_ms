@@ -3,8 +3,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from filwuha.models import db
 
+
 class Admin(db.Model, UserMixin):
-    __tablename__ = 'admins'
+    __tablename__ = "admins"
 
     admin_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(64), unique=True, nullable=False)

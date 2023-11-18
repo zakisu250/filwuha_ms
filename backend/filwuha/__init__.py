@@ -8,7 +8,8 @@ CORS(app)
 
 @app.route("/")
 def home():
- return "Hello world"
+    return "Hello world"
+
 
 """ configurations """
 MYSQL_USER = config("MYSQL_USER")
