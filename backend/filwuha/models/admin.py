@@ -16,5 +16,12 @@ class Admin(db.Model, UserMixin):
         self.username = username
         self.password_hash = generate_password_hash(password)
 
+    def serilaize(self):
+        return {
+            "admin_id": self.admin_id,
+            "username": self.username,
+            "created_at": self.created_at,
+        }
+
     # def check_password(self, password):
     #     return check_password_hash(self.password_hash, password)
