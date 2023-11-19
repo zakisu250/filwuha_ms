@@ -34,7 +34,7 @@ class Order(db.Model):
         self.price = price
         self.payment = payment
 
-    def serilaize(self):
+    def serialize(self):
         return {
             "order_id": self.order_id,
             "first_name": self.first_name,
