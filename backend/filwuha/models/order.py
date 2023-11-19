@@ -33,3 +33,16 @@ class Order(db.Model):
         self.order_time = order_time
         self.price = price
         self.payment = payment
+
+    def serilaize(self):
+        return {
+            "order_id": self.order_id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "phone_number": self.phone_number,
+            "order_date": self.order_date,
+            "order_time": self.order_time,
+            "price": self.price,
+            "payment": self.payment,
+        }
