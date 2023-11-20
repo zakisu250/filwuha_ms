@@ -21,8 +21,10 @@ def get_orders():
 
 @admin_bp.route("/admin/orders/<id>", strict_slashes=False)
 def get_order(id):
+    order_obj = Order.query.get(id)
+    if not order_obj:
+        return jsonify(Error="Order not found"), 404
     try:
-        order_obj = Order.query.get(id)
         serialized_order = order_obj.serialize()
         return jsonify(Order=serialized_order)
     except Exception as e:
