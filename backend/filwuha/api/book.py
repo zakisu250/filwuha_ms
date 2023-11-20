@@ -1,15 +1,28 @@
 from flask import Blueprint, request, abort, jsonify
 from filwuha.models import Order
+from filwuha.models import db
 
 book_bp = Blueprint("book", __name__, url_prefix="/api/v1")
 
 @book_bp.route("/book", methods=["POST"], strict_slashes=False)
 def create_book():
+    if not request.get_json():
+        abort(400, description="No input data provided")
+    if "first_name"  not in request.get_json():
+        abort(400, description="Missing first_name data")
+    if "last_name" not in request.get_json():
+        abort(400, description="Missing last_name data")
+    if "phone_number" not in request.get_json():
+        abort(400, description="Missing phone_number data")
+    if "order_date" not in request.get_json():
+        abort(400, description="Missing order_date data")
+    if "order_time" not in request.get_json():
+        abort(400, description="Missing order_time data")
+    if "price" not in request.get_json():
+        abort(400, description="Missing price data")
+    if "payment" not in request.get_json():
+        abort(400, description="Missing payment data")
     try:
-        if not request.get_json():
-            abort(400, description="No input data provided")
-        if "user_name" or "last_name" or "phone_number" or "order_date" or "order_time" or "price" or "payment" not in request.get_json():
-            abort(400, description="Missing input data")
         data = request.get_json()
         new_book = Order(
             first_name=data["first_name"],
@@ -21,6 +34,8 @@ def create_book():
             price=data["price"],
             payment=data["payment"],
         )
+        db.session.add(new_book)
+        db.session.commit()
         return jsonify(new_book.serialize()), 201
     except Exception as e:
         abort(500, description=str(e))

@@ -9,8 +9,8 @@ class Order(db.Model):
     last_name = db.Column(db.String(45), nullable=False)
     email = db.Column(db.String(45), nullable=True)
     phone_number = db.Column(db.String(45), nullable=False)
-    order_date = db.Column(db.DateTime, nullable=False)
-    order_time = db.Column(db.DateTime, nullable=False)
+    order_date = db.Column(db.Date, nullable=False)
+    order_time = db.Column(db.Time, nullable=False)
     price = db.Column(db.Float, nullable=False)
     payment = db.Column(db.Boolean, nullable=False)
 
@@ -41,8 +41,8 @@ class Order(db.Model):
             "last_name": self.last_name,
             "email": self.email,
             "phone_number": self.phone_number,
-            "order_date": self.order_date,
-            "order_time": self.order_time,
+            "order_date": str(self.order_date),
+            "order_time": self.order_time.isoformat(),
             "price": self.price,
             "payment": self.payment,
         }
