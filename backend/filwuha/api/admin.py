@@ -9,7 +9,7 @@ from filwuha.models import db
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/v1")
 
 
-@admin_bp.route("/admin/orders")
+@admin_bp.route("/admin/orders", strict_slashes=False)
 def get_orders():
     try:
         orders_obj = Order.query.all()
@@ -19,7 +19,7 @@ def get_orders():
         return jsonify(Error=str(e)), 404
 
 
-@admin_bp.route("/admin/orders/<id>")
+@admin_bp.route("/admin/orders/<id>", strict_slashes=False)
 def get_order(id):
     try:
         order_obj = Order.query.get(id)
@@ -29,7 +29,7 @@ def get_order(id):
         return jsonify(Error=str(e)), 404
 
 
-@admin_bp.route("/admin/orders/<id>", methods=["DELETE"])
+@admin_bp.route("/admin/orders/<id>", methods=["DELETE"], strict_slashes=False)
 def delete_order(id):
     try:
         order_obj = Order.query.get(id)
@@ -59,7 +59,7 @@ def login():
         if not admin_obj or not admin_obj.check_password(data["password_hash"]):
             abort(401, description="Invalid username or password")
         # login_user(admin_obj)
-        return jsonify({"message": "Admin Login Sucessfull"}), 200
+        return jsonify({"message": "Admin Login Successful"}), 200
     except Exception as e:
         return jsonify(Error=str(e)), 404
 
