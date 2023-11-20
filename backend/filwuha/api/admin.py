@@ -47,24 +47,30 @@ def validate_request(required_fields):
 
 @admin_bp.route("/admin/login", methods=["POST"], strict_slashes=False)
 def login():
-    required_fields = ["username", "password_hash"]
-    data = validate_request(required_fields)
-    admin_obj = Admin.query.filter_by(username=data["username"]).first()
-    if not admin_obj or not admin_obj.check_password(data["password"]):
-        abort(401, description="Invalid username or password")
-    login_user(admin_obj)
-    return jsonify(admin_obj.serilaize()), 200
+    try:
+        required_fields = ["username", "password_hash"]
+        data = validate_request(required_fields)
+        admin_obj = Admin.query.filter_by(username=data["username"]).first()
+        if not admin_obj or not admin_obj.check_password(data["password"]):
+            abort(401, description="Invalid username or password")
+        login_user(admin_obj)
+        return jsonify(admin_obj.serilaize()), 200
+    except Exception as e:
+        return jsonify(Error=str(e)), 404
 
 @admin_bp.route("/admin/orders/<id>", methods=["PUT"], strict_slashes=False)
 def update_order(id):
-    data = request.get_json()
-    order_obj = Order.query.get(id)
-    order_obj.first_name = data["first_name"]
-    order_obj.last_name = data["last_name"]
-    order_obj.phone_number = data["phone_number"]
-    order_obj.order_date = data["order_date"]
-    order_obj.order_time = data["order_time"]
-    order_obj.price = data["price"]
-    order_obj.payment = data["payment"]
-    order_obj.update()
-    return jsonify(order_obj.serialize()), 200
+    try:
+        data = request.get_json()
+        order_obj = Order.query.get(id)
+        order_obj.first_name = data["first_name"]
+        order_obj.last_name = data["last_name"]
+        order_obj.phone_number = data["phone_number"]
+        order_obj.order_date = data["order_date"]
+        order_obj.order_time = data["order_time"]
+        order_obj.price = data["price"]
+        order_obj.payment = data["payment"]
+        order_obj.update()
+        return jsonify(order_obj.serialize()), 200
+    except Exception as e:
+        return jsonify(Error=str(e)), 404
