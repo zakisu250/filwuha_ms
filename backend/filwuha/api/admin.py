@@ -4,6 +4,7 @@ from flask_login import login_user
 from filwuha.models import Order
 from filwuha.models import Admin
 
+
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/v1")
 
 
@@ -51,10 +52,10 @@ def login():
         required_fields = ["username", "password_hash"]
         data = validate_request(required_fields)
         admin_obj = Admin.query.filter_by(username=data["username"]).first()
-        if not admin_obj or not admin_obj.check_password(data["password"]):
+        if not admin_obj or not admin_obj.check_password(data["password_hash"]):
             abort(401, description="Invalid username or password")
-        login_user(admin_obj)
-        return jsonify(admin_obj.serilaize()), 200
+        # login_user(admin_obj)
+        return jsonify({"message": "Admin Login Sucessfull"}), 200
     except Exception as e:
         return jsonify(Error=str(e)), 404
 
