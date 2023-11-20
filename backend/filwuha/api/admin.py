@@ -6,14 +6,6 @@ from filwuha.models import Admin
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/v1")
 
-def validate_request(required_fields):
-    data = request.get_json()
-    if not data:
-        abort(400, description="No input data provided")
-    missing_fields = [field for field in required_fields if field not in data]
-    if missing_fields:
-        abort(400, description=f"Missing fields: {', '.join(missing_fields)}")
-    return data
 
 @admin_bp.route("/admin/orders")
 def get_orders():
@@ -43,6 +35,15 @@ def delete_order(id):
         return jsonify({"message": "Order successfully deleted"})
     except Exception as e:
         return jsonify(Error=str(e)), 404
+    
+def validate_request(required_fields):
+    data = request.get_json()
+    if not data:
+        abort(400, description="No input data provided")
+    missing_fields = [field for field in required_fields if field not in data]
+    if missing_fields:
+        abort(400, description=f"Missing fields: {', '.join(missing_fields)}")
+    return data
 
 @admin_bp.route("/admin/login", methods=["POST"], strict_slashes=False)
 def login():
@@ -56,8 +57,7 @@ def login():
 
 @admin_bp.route("/admin/orders/<id>", methods=["PUT"], strict_slashes=False)
 def update_order(id):
-    required_fields = ["first_name", "last_name", "phone_number", "order_date", "order_time", "price", "payment"]
-    data = validate_request(required_fields)
+    data = request.get_json()
     order_obj = Order.query.get(id)
     order_obj.first_name = data["first_name"]
     order_obj.last_name = data["last_name"]
