@@ -3,6 +3,7 @@ from flask import Blueprint
 from flask_login import login_user
 from filwuha.models import Order
 from filwuha.models import Admin
+from filwuha.models import db
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/api/v1")
 
@@ -31,11 +32,13 @@ def get_order(id):
 def delete_order(id):
     try:
         order_obj = Order.query.get(id)
-        order_obj.delete()
-        return jsonify({"message": "Order successfully deleted"})
+        db.session.delete(order_obj)
+        db.session.commit()
+        return jsonify({"message": "Order successfully deleted"}), 200
     except Exception as e:
         return jsonify(Error=str(e)), 404
-    
+
+
 def validate_request(required_fields):
     data = request.get_json()
     if not data:
@@ -44,6 +47,7 @@ def validate_request(required_fields):
     if missing_fields:
         abort(400, description=f"Missing fields: {', '.join(missing_fields)}")
     return data
+
 
 @admin_bp.route("/admin/login", methods=["POST"], strict_slashes=False)
 def login():
@@ -57,6 +61,7 @@ def login():
         return jsonify(admin_obj.serilaize()), 200
     except Exception as e:
         return jsonify(Error=str(e)), 404
+
 
 @admin_bp.route("/admin/orders/<id>", methods=["PUT"], strict_slashes=False)
 def update_order(id):
