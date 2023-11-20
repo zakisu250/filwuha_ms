@@ -33,8 +33,10 @@ def get_order(id):
 
 @admin_bp.route("/admin/orders/<id>", methods=["DELETE"], strict_slashes=False)
 def delete_order(id):
+    order_obj = Order.query.get(id)
+    if not order_obj:
+        return jsonify(Error="Order not found"), 404
     try:
-        order_obj = Order.query.get(id)
         db.session.delete(order_obj)
         db.session.commit()
         return jsonify({"message": "Order successfully deleted"}), 200
