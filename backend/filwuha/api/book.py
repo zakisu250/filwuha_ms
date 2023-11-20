@@ -9,19 +9,19 @@ def create_book():
     if not request.get_json():
         abort(400, description="No input data provided")
     if "first_name"  not in request.get_json():
-        abort(400, description="Missing first_name data")
+        abort(400, description="Missing first_name")
     if "last_name" not in request.get_json():
-        abort(400, description="Missing last_name data")
+        abort(400, description="Missing last_name")
     if "phone_number" not in request.get_json():
-        abort(400, description="Missing phone_number data")
+        abort(400, description="Missing phone_number")
     if "order_date" not in request.get_json():
-        abort(400, description="Missing order_date data")
+        abort(400, description="Missing order_date")
     if "order_time" not in request.get_json():
-        abort(400, description="Missing order_time data")
+        abort(400, description="Missing order_time")
     if "price" not in request.get_json():
-        abort(400, description="Missing price data")
+        abort(400, description="Missing price")
     if "payment" not in request.get_json():
-        abort(400, description="Missing payment data")
+        abort(400, description="Missing payment")
     try:
         data = request.get_json()
         new_book = Order(
