@@ -71,12 +71,13 @@ def update_order(id):
         order_obj = Order.query.get(id)
         order_obj.first_name = data["first_name"]
         order_obj.last_name = data["last_name"]
+        order_obj.email = data["email"]
         order_obj.phone_number = data["phone_number"]
         order_obj.order_date = data["order_date"]
         order_obj.order_time = data["order_time"]
         order_obj.price = data["price"]
         order_obj.payment = data["payment"]
-        order_obj.update()
+        db.session.commit()
         return jsonify(order_obj.serialize()), 200
     except Exception as e:
         return jsonify(Error=str(e)), 404
