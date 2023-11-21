@@ -14,7 +14,7 @@ function Navbar() {
           <li>
             <Link
               to="/"
-              className="text-blue-950 font-bold py-4 px-8 text-lg hover:text-gray-400"
+              className="text-blue-950 font-bold py-4 px-8 text-lg hover:text-gray-500"
             >
               Home
             </Link>
@@ -22,7 +22,7 @@ function Navbar() {
           <li>
             <Link
               to="/services"
-              className="text-blue-950 font-bold py-4 px-8 text-lg hover:text-gray-400"
+              className="text-blue-950 font-bold py-4 px-8 text-lg hover:text-gray-500"
             >
               Services
             </Link>
@@ -30,7 +30,7 @@ function Navbar() {
           <li>
             <Link
               to="/about"
-              className="text-blue-950 font-bold py-4 px-8 text-lg hover:text-gray-400"
+              className="text-blue-950 font-bold py-4 px-8 text-lg hover:text-gray-500"
             >
               About
             </Link>
@@ -38,7 +38,7 @@ function Navbar() {
           <li>
             <Link
               to="/contact"
-              className="text-blue-950 font-bold py-4 px-8 text-lg hover:text-gray-400"
+              className="text-blue-950 font-bold py-4 px-8 text-lg hover:text-gray-500"
             >
               Contact Us
             </Link>
