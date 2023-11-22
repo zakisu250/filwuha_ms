@@ -1,23 +1,25 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Book() {
+  const navigate = useNavigate();
   const timeIntervals = [
-    "8:00 AM - 9:00 AM",
-    "9:00 AM - 10:00 AM",
-    "10:00 AM - 11:00 AM",
-    "11:00 AM - 12:00 PM",
-    "1:00 PM - 2:00 PM",
-    "2:00 PM - 3:00 PM",
-    "3:00 PM - 4:00 PM",
-    "4:00 PM - 5:00 PM",
+    '08:00 AM - 09:00 AM',
+    '09:00 AM - 10:00 AM',
+    '10:00 AM - 11:00 AM',
+    '11:00 AM - 12:00 PM',
+    '01:00 PM - 02:00 PM',
+    '02:00 PM - 03:00 PM',
+    '03:00 PM - 04:00 PM',
+    '04:00 PM - 05:00 PM',
   ];
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    orderDate: "",
-    orderTime: "",
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+    orderDate: '',
+    orderTime: '',
   });
 
   const handleInputChange = (e) => {
@@ -27,7 +29,7 @@ function Book() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    navigate('/payment', { state: formData });
   };
 
   return (
@@ -98,7 +100,7 @@ function Book() {
           >
             <option value="">Select Time</option>
             {timeIntervals.map((time) => (
-              <option key={time} value={time}>
+              <option key={time} value={time.slice(0, 8)}>
                 {time}
               </option>
             ))}
@@ -122,15 +124,14 @@ function Book() {
           <input
             type="checkbox"
             name="terms"
-            value={formData.terms}
             onChange={handleInputChange}
             className="mr-2"
             required
           />
           <label htmlFor="terms">
-            I agree to the{" "}
+            I agree to the{' '}
             <a
-              href="#"
+              href="/terms"
               className="text-blue-500 hover:text-blue-600 transition duration-500 ease-in-out"
             >
               Terms & Conditions
