@@ -1,4 +1,6 @@
-import '../../assets/styles/App.css';
+import "../../assets/styles/App.css";
+import React from "react";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -12,9 +14,12 @@ function Home() {
           Ordering the best of our services in the city, <br />
           hassle free.
         </p>
-        <button className="mt-5 px-10 py-2 bg-accentColor hover:bg-accentColor/80 hover:text-textIcon hover:scale-105 transition-all rounded-xl text-xl font-bold">
+        <Link
+          to="/book"
+          className="mt-5 px-10 py-2 bg-accentColor hover:bg-accentColor/80 hover:text-textIcon hover:scale-105 transition-all rounded-xl text-xl font-bold"
+        >
           Book now
-        </button>
+        </Link>
       </div>
     </div>
   );
