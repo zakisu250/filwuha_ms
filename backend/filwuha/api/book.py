@@ -19,6 +19,8 @@ def create_book():
         abort(400, description="Missing order_date")
     if "order_time" not in request.get_json():
         abort(400, description="Missing order_time")
+    if "slot" not in request.get_json():
+        abort(400, description="Missing slot")
     if "price" not in request.get_json():
         abort(400, description="Missing price")
     if "payment" not in request.get_json():
@@ -32,6 +34,7 @@ def create_book():
             phone_number=data["phone_number"],
             order_date=data["order_date"],
             order_time=data["order_time"],
+            slot=data["slot"],
             price=data["price"],
             payment=data["payment"],
         )
