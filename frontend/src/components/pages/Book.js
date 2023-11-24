@@ -22,6 +22,10 @@ function Book() {
     orderTime: "",
     slot: "",
   });
+  let today = new Date().toISOString().split("T")[0];
+  let lastDate = new Date();
+  lastDate.setDate(lastDate.getDate() + 30);
+  lastDate = lastDate.toISOString().split("T")[0];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -86,6 +90,8 @@ function Book() {
           <input
             type="date"
             name="orderDate"
+            min={today}
+            max={lastDate}
             value={formData.orderDate}
             onChange={handleInputChange}
             placeholder="Date"
