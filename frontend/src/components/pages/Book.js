@@ -1,25 +1,26 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Book() {
   const navigate = useNavigate();
   const timeIntervals = [
-    '08:00 AM - 09:00 AM',
-    '09:00 AM - 10:00 AM',
-    '10:00 AM - 11:00 AM',
-    '11:00 AM - 12:00 PM',
-    '01:00 PM - 02:00 PM',
-    '02:00 PM - 03:00 PM',
-    '03:00 PM - 04:00 PM',
-    '04:00 PM - 05:00 PM',
+    "08:00 AM - 09:00 AM",
+    "09:00 AM - 10:00 AM",
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "01:00 PM - 02:00 PM",
+    "02:00 PM - 03:00 PM",
+    "03:00 PM - 04:00 PM",
+    "04:00 PM - 05:00 PM",
   ];
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    orderDate: '',
-    orderTime: '',
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    orderDate: "",
+    orderTime: "",
+    slot: "",
   });
 
   const handleInputChange = (e) => {
@@ -29,7 +30,7 @@ function Book() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/payment', { state: formData });
+    navigate("/payment", { state: formData });
   };
 
   return (
@@ -129,7 +130,7 @@ function Book() {
             required
           />
           <label htmlFor="terms">
-            I agree to the{' '}
+            I agree to the{" "}
             <a
               href="/terms"
               className="text-blue-500 hover:text-blue-600 transition duration-500 ease-in-out"
