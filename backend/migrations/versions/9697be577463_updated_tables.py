@@ -1,8 +1,8 @@
-"""init db
+"""updated tables
 
-Revision ID: 2cf225adf51e
+Revision ID: 9697be577463
 Revises: 
-Create Date: 2023-11-19 05:16:17.119940
+Create Date: 2023-11-24 16:15:44.587623
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2cf225adf51e'
+revision = '9697be577463'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('admins',
     sa.Column('admin_id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('username', sa.String(length=64), nullable=False),
-    sa.Column('password_hash', sa.String(length=128), nullable=False),
+    sa.Column('password_hash', sa.String(length=255), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('admin_id'),
     sa.UniqueConstraint('username')
@@ -32,8 +32,9 @@ def upgrade():
     sa.Column('last_name', sa.String(length=45), nullable=False),
     sa.Column('email', sa.String(length=45), nullable=True),
     sa.Column('phone_number', sa.String(length=45), nullable=False),
-    sa.Column('order_date', sa.DateTime(), nullable=False),
-    sa.Column('order_time', sa.DateTime(), nullable=False),
+    sa.Column('order_date', sa.Date(), nullable=False),
+    sa.Column('order_time', sa.Time(), nullable=False),
+    sa.Column('slot_number', sa.Integer(), nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
     sa.Column('payment', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('order_id')
