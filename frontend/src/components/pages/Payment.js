@@ -1,5 +1,5 @@
-import { useLocation } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
 
 function Payment() {
   const location = useLocation();
@@ -11,11 +11,12 @@ function Payment() {
     phone: phone_number,
     orderDate: order_date,
     orderTime: order_time,
+    slot,
   } = formData;
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentId, setPaymentId] = useState('');
+  const [paymentId, setPaymentId] = useState("");
   const [message, setMessage] = useState(false);
 
   const handlePay = async (e) => {
@@ -25,10 +26,10 @@ function Payment() {
       try {
         // Make a post request to the payment API
         setIsLoading(true);
-        const response = await fetch('http://127.0.0.1:5000/api/v1/book', {
-          method: 'POST',
+        const response = await fetch("http://127.0.0.1:5000/api/v1/book", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             first_name,
@@ -37,6 +38,7 @@ function Payment() {
             phone_number,
             order_date,
             order_time,
+            slot,
             price: 100,
             payment: false,
           }),
@@ -67,11 +69,11 @@ function Payment() {
         if (data?.payment) {
           setPaymentStatus(true);
           setIsPaying(false);
-          setMessage('Payment Successful');
+          setMessage("Payment Successful");
         } else {
           setPaymentStatus(false);
           setIsPaying(true);
-          setMessage('Payment Not Successful');
+          setMessage("Payment Not Successful");
         }
       } catch (error) {
         console.log(error);
@@ -92,7 +94,7 @@ function Payment() {
             <strong>
               {formData.firstName} {formData.lastName}
             </strong>
-          </span>{' '}
+          </span>{" "}
         </li>
 
         <li className="flex justify-between py-2">
@@ -152,7 +154,7 @@ function Payment() {
             <strong>
               {formData.firstName} {formData.lastName}
             </strong>
-          </span>{' '}
+          </span>{" "}
         </li>
 
         <li className="flex justify-between py-2">
@@ -199,7 +201,7 @@ function Payment() {
         <li className="flex justify-between py-2">
           <p>Payment Status:</p>
           <span>
-            <strong>{paymentStatus ? 'Paid' : 'Not Paid'}</strong>
+            <strong>{paymentStatus ? "Paid" : "Not Paid"}</strong>
           </span>
         </li>
       </ul>
@@ -209,7 +211,7 @@ function Payment() {
         disabled={isLoading}
         onClick={handlePay}
       >
-        {isLoading ? 'Loading...' : isPaying ? 'Check Payment' : 'Pay'}
+        {isLoading ? "Loading..." : isPaying ? "Check Payment" : "Pay"}
       </button>
     </div>
   );
