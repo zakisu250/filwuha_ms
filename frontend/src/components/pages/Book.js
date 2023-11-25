@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Book() {
@@ -13,6 +13,7 @@ function Book() {
     "03:00 PM - 04:00 PM",
     "04:00 PM - 05:00 PM",
   ];
+  const [reservedSlots, setReservedSlots] = useState({});
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,10 +28,55 @@ function Book() {
   lastDate.setDate(lastDate.getDate() + 30);
   lastDate = lastDate.toISOString().split("T")[0];
 
+  useEffect(() => {
+    const fetchReservedSlots = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/v1/reserved_slots"
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setReservedSlots(data);
+        } else {
+          throw new Error("Failed to fetch reserved slots");
+        }
+      } catch (error) {
+        console.error(error);
+        setReservedSlots({});
+      }
+    };
+
+    fetchReservedSlots();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const filterUnavailableSlots = () => {
+    const selectedDateSlots = reservedSlots[formData.orderDate];
+    const selectedTimeIndex = timeIntervals.findIndex((time) =>
+      time.includes(formData.orderTime)
+    );
+
+    if (selectedDateSlots && selectedTimeIndex !== -1) {
+      const unavailableSlots = selectedDateSlots
+        .filter(
+          (slotInfo) =>
+            slotInfo.time.slice(0, 5) === formData.orderTime.slice(0, 5)
+        )
+        .map((slotInfo) => slotInfo.slot);
+
+      return [1, 2, 3, 4, 5, 6].filter(
+        (slot) => !unavailableSlots.includes(slot)
+      );
+    }
+
+    return [1, 2, 3, 4, 5, 6];
+  };
+
+  const filteredSlots = filterUnavailableSlots();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -106,8 +152,8 @@ function Book() {
             required
           >
             <option value="">Select Time</option>
-            {timeIntervals.map((time) => (
-              <option key={time} value={time.slice(0, 8)}>
+            {timeIntervals.map((time, index) => (
+              <option key={index} value={time.slice(0, 8)}>
                 {time}
               </option>
             ))}
@@ -119,8 +165,8 @@ function Book() {
             className="border rounded-md p-2"
             required
           >
-            <option value="">Select Slot</option>
-            {[1, 2, 3, 4, 5, 6].map((slot) => (
+            <option value="">None</option>
+            {filteredSlots.map((slot) => (
               <option key={slot} value={slot}>
                 Slot {slot}
               </option>

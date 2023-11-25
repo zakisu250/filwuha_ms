@@ -11,7 +11,7 @@ class Order(db.Model):
     phone_number = db.Column(db.String(45), nullable=False)
     order_date = db.Column(db.Date, nullable=False)
     order_time = db.Column(db.Time, nullable=False)
-    slot = db.Column(db.Integer, nullable=False)
+    slot_number = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
     payment = db.Column(db.Boolean, nullable=False)
 
@@ -23,7 +23,7 @@ class Order(db.Model):
         phone_number,
         order_date,
         order_time,
-        slot,
+        slot_number,
         price,
         payment,
     ):
@@ -33,7 +33,7 @@ class Order(db.Model):
         self.phone_number = phone_number
         self.order_date = order_date
         self.order_time = order_time
-        self.slot = slot
+        self.slot_number = slot_number
         self.price = price
         self.payment = payment
 
@@ -46,7 +46,7 @@ class Order(db.Model):
             "phone_number": self.phone_number,
             "order_date": str(self.order_date),
             "order_time": self.order_time.isoformat(),
-            "slot": self.slot,
+            "slot_number": self.slot_number,
             "price": self.price,
             "payment": self.payment,
         }
