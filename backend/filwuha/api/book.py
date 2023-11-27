@@ -5,9 +5,14 @@ from datetime import date, timedelta
 
 book_bp = Blueprint("book", __name__, url_prefix="/api/v1")
 
+
 @book_bp.route("/reserved_slots", methods=["GET"], strict_slashes=False)
 def get_reserved_slots():
-    booked_slots = db.session.query(Order.order_date, Order.order_time, Order.slot_number).order_by(Order.order_date).all()
+    booked_slots = (
+        db.session.query(Order.order_date, Order.order_time, Order.slot_number)
+        .order_by(Order.order_date)
+        .all()
+    )
 
     grouped_slots = {}
     for slot in booked_slots:
@@ -54,7 +59,16 @@ def create_book():
         )
         db.session.add(new_book)
         db.session.commit()
-        return jsonify(new_book.serialize()), 201
+        return (
+            jsonify(
+                {
+                    "message": "Order successful, proceed to payment",
+                    "order_id": new_book.order_id,
+                    "payment": False,
+                }
+            ),
+            201,
+        )
     except Exception as e:
         abort(500, description=str(e))
 
@@ -63,11 +77,14 @@ def create_book():
 def get_book(id):
     book_obj = Order.query.get(id)
     if not book_obj:
-        abort(404, description="Book not found")
+        abort(404, description="Order not found")
     try:
         if not book_obj.payment:
-            return jsonify(book_obj.serialize()), 402
+            return jsonify({"message": "Payment not Successful"}), 402
         else:
-            return jsonify(book_obj.serialize()), 200
+            return (
+                jsonify({"message": "Order successfully booked, thank you"}),
+                200,
+            )
     except Exception as e:
         abort(500, description=str(e))
