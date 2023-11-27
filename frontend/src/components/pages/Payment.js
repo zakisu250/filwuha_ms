@@ -1,5 +1,5 @@
-import { useLocation } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useLocation } from "react-router-dom";
+import React, { useState } from "react";
 
 function Payment() {
   const location = useLocation();
@@ -16,7 +16,7 @@ function Payment() {
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentId, setPaymentId] = useState('');
+  const [paymentId, setPaymentId] = useState("");
   const [message, setMessage] = useState(false);
 
   const handlePay = async (e) => {
@@ -26,10 +26,10 @@ function Payment() {
       try {
         // Make a post request to the payment API
         setIsLoading(true);
-        const response = await fetch('http://127.0.0.1:5000/api/v1/book', {
-          method: 'POST',
+        const response = await fetch("http://127.0.0.1:5000/api/v1/book", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             first_name,
@@ -69,11 +69,11 @@ function Payment() {
         if (data?.payment) {
           setPaymentStatus(true);
           setIsPaying(false);
-          setMessage('Payment Successful');
+          setMessage("Payment Successful");
         } else {
           setPaymentStatus(false);
           setIsPaying(true);
-          setMessage('Payment Not Successful');
+          setMessage("Payment Not Successful");
         }
       } catch (error) {
         console.log(error);
@@ -85,26 +85,22 @@ function Payment() {
 
   return (
     <div className="flex">
-      <div className="flex flex-col justify-center items-center h-1/2 text-xl w-1/3 mx-auto mt-20 p-5 border border-y-primaryText">
-        <h2 className="font-bold text-center text-4xl mb-10 w-full">
+      <div className="flex flex-col justify-center items-center h-1/2 w-1/3 mx-auto mt-32 p-5 border border-y-primaryText">
+        <h3 className="font-bold text-center text-4xl mb-10 w-full">
           Payment Page
-        </h2>
+        </h3>
         <p className="text-left w-full mb-2 font-bold">Order Summary:</p>
         <ul className="text-left w-full">
           <li className="flex justify-between py-2">
             <p>Name:</p>
             <span>
-              <strong>
-                {formData.firstName} {formData.lastName}
-              </strong>
-            </span>{' '}
+              {formData.firstName} {formData.lastName}
+            </span>{" "}
           </li>
 
           <li className="flex justify-between py-2">
             <p>Product:</p>
-            <span>
-              <strong>{formData.service}</strong>
-            </span>
+            <span>{formData.service}</span>
           </li>
 
           {formData.email && (
@@ -116,44 +112,32 @@ function Payment() {
 
           <li className="flex justify-between py-2">
             <p>Phone number:</p>
-            <span>
-              <strong>{formData.phone}</strong>
-            </span>
+            <span>{formData.phone}</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Date:</p>
-            <span>
-              <strong>{formData.orderDate}</strong>
-            </span>
+            <span>{formData.orderDate}</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Time:</p>
-            <span>
-              <strong>{formData.orderTime}</strong>
-            </span>
+            <span>{formData.orderTime}</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Slot:</p>
-            <span>
-              <strong>{formData.slot}</strong>
-            </span>
+            <span>{formData.slot}</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Price:</p>
-            <span>
-              <strong>100 ETB</strong>
-            </span>
+            <span>100 ETB</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Payment Status:</p>
-            <span>
-              <strong>{paymentStatus ? 'Paid' : 'Not Paid'}</strong>
-            </span>
+            <span>{paymentStatus ? "Paid" : "Not Paid"}</span>
           </li>
         </ul>
         <p>{paymentStatus}</p>
@@ -162,7 +146,7 @@ function Payment() {
           disabled={isLoading}
           onClick={handlePay}
         >
-          {isLoading ? 'Loading...' : isPaying ? 'Check Payment' : 'Pay'}
+          {isLoading ? "..." : isPaying ? "Check" : "Pay"}
         </button>
       </div>
     </div>
