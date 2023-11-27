@@ -10,20 +10,23 @@ import NotFound from "./components/pages/NotFound";
 import Payment from "./components/pages/Payment";
 import AdminLogin from "./components/pages/AdminLogin";
 import AdminPage from "./components/pages/AdminPage";
+import Layout from './components/Layout';
 
 function App() {
   return (
     <BrowserRouter>
-      {/* <Navbar /> */}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/book" element={<Book />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/home" element={<AdminPage />} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="services" element={<Services />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="book" element={<Book />} />
+          <Route path="payment" element={<Payment />} />
+        </Route>
+        <Route path="/admin" element={<AdminLogin />}>
+          <Route path="home" element={<AdminPage />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
