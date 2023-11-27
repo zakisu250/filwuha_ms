@@ -23,10 +23,6 @@ function App() {
           <Route path="book" element={<Book />} />
           <Route path="payment" element={<Payment />} />
         </Route>
-        <Route path="">
-          <Route index element={<AdminLogin />} />
-          <Route path="home" element={<AdminDashboard />} />
-        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
