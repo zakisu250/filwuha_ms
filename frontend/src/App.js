@@ -9,18 +9,20 @@ import NotFound from './components/pages/NotFound';
 import './assets/styles/App.css';
 import React from 'react';
 import Payment from './components/pages/Payment';
+import Layout from './components/Layout';
 
 function App() {
   return (
     <BrowserRouter>
-      {/* <Navbar /> */}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/book" element={<Book />} />
-        <Route path="/payment" element={<Payment />} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="services" element={<Services />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="book" element={<Book />} />
+          <Route path="payment" element={<Payment />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
