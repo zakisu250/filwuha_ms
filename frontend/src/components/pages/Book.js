@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { checkReservedSlots } from '../../apis/utils';
 
 function Book() {
   const navigate = useNavigate();
+
   const timeIntervals = [
     '08:00 AM - 09:00 AM',
     '09:00 AM - 10:00 AM',
@@ -23,6 +25,8 @@ function Book() {
     orderTime: '',
     slot_number: '',
   });
+  const [message, setMessage] = useState('');
+
   let today = new Date().toISOString().split('T')[0];
   let lastDate = new Date();
   lastDate.setDate(lastDate.getDate() + 30);
@@ -31,23 +35,17 @@ function Book() {
   useEffect(() => {
     const fetchReservedSlots = async () => {
       try {
-        const response = await fetch(
-          'http://localhost:5000/api/v1/reserved_slots'
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setReservedSlots(data);
-        } else {
-          throw new Error('Failed to fetch reserved slots');
-        }
+        const response = await checkReservedSlots(formData);
+        setReservedSlots(response);
       } catch (error) {
         console.error(error);
         setReservedSlots({});
+        setMessage(error);
       }
     };
 
     fetchReservedSlots();
-  }, []);
+  }, [formData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -84,8 +82,8 @@ function Book() {
   };
 
   return (
-    <div className="flex">
-      <div className="max-w-md mx-auto p-6 border rounded-md shadow-md mt-40">
+    <div className="flex mt-10">
+      <div className="max-w-md mx-auto p-6 border rounded-md shadow-md">
         <h2 className="text-xl font-semibold mb-4">Booking</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
@@ -164,7 +162,7 @@ function Book() {
               value={formData.slot_number}
               onChange={handleInputChange}
               className="border rounded-md p-2"
-              required
+              // required
             >
               <option value="">None</option>
               {filteredSlots.map((slot) => (
@@ -192,7 +190,7 @@ function Book() {
               </a>
             </label>
           </div>
-          <div className="mt-4"></div>
+          {message && <p className="text-red-500">{message}</p>}
           <div className="flex justify-center">
             <button
               type="submit"
