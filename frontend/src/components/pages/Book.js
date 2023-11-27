@@ -159,14 +159,14 @@ function Book() {
             </select>
             <select
               name="slot"
-              value={formData.slot_number}
+              value={formData.slot}
               onChange={handleInputChange}
               className="border rounded-md p-2"
               // required
             >
               <option value="">None</option>
-              {filteredSlots.map((slot) => (
-                <option key={slot} value={slot}>
+              {filteredSlots.map((slot, index) => (
+                <option key={index} value={slot}>
                   Slot {slot}
                 </option>
               ))}

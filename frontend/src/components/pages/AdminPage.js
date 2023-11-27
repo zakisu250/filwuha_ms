@@ -1,86 +1,121 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import {
   faCheckCircle,
   faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
+import { fetchOrders, updateOrder, deleteOrder } from '../../apis/utils';
+import { toast } from 'react-toastify';
 
 const AdminPage = () => {
   const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [editingOrder, setEditingOrder] = useState(null);
-  const [updatedOrderDatails, setUpdatedOrderDetails] = useState({
-    first_name: "",
-    last_name: "",
-    phone_number: "",
-    email: "",
-    order_date: "",
-    order_time: "",
-    slot_number: "",
-    price: "",
-    payment: "",
+  const [updatedOrderDetails, setUpdatedOrderDetails] = useState({
+    first_name: '',
+    last_name: '',
+    phone_number: '',
+    email: '',
+    order_date: '',
+    order_time: '',
+    slot_number: '',
+    price: 100,
+    payment: false,
   });
 
   useEffect(() => {
-    async function fetchOrders() {
-      try {
-        const response = await axios.get(
-          "http://127.0.0.1:5000/api/v1/admin/orders/"
-        );
-        setOrders(response.data.Orders);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    }
-
-    fetchOrders();
-  }, []);
+    const fetchData = async function () {
+      const response = await fetchOrders();
+      setOrders(response.Orders);
+    };
+    fetchData();
+  }, [confirmDelete]);
 
   const handleUpdateOrder = (orderId) => {
     setEditingOrder(orderId);
+    const order = orders.find((order) => order.order_id === orderId);
+    setUpdatedOrderDetails({
+      first_name: order.first_name,
+      last_name: order.last_name,
+      phone_number: order.phone_number,
+      email: order.email,
+      order_date: order.order_date,
+      order_time: order.order_time,
+      slot_number: order.slot_number,
+      price: order.price,
+      payment: order.payment,
+    });
   };
+
   const confirmUpdateOrder = async (orderId) => {
+    setIsLoading(true);
     try {
-      await axios.put(`http://127.0.0.1:5000/api/v1/admin/orders/${orderId}`);
       setOrders(
         orders.map((order) =>
           order.order_id === orderId
-            ? { ...order, ...updatedOrderDatails }
+            ? { ...order, ...updatedOrderDetails }
             : order
         )
       );
+      const data = await updateOrder(orderId, updatedOrderDetails);
       setEditingOrder(null);
+      toast.success(data.message, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
     } catch (error) {
-      console.error("Error updating order:", error);
+      console.error('Error updating order:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const handleDeleteOrder = (orderId) => {
     setConfirmDelete(orderId);
-    console.log("Deleting order:", orderId);
   };
+
   const confirmDeleteOrder = async (orderId) => {
     try {
-      await axios.delete(
-        `http://127.0.0.1:5000/api/v1/admin/orders/${orderId}`
-      );
+      const data = await deleteOrder(orderId);
       setOrders(
         orders.map((order) =>
           order.order_id === editingOrder
-            ? { ...order, ...updatedOrderDatails }
+            ? { ...order, ...updatedOrderDetails }
             : order
         )
       );
       setConfirmDelete(null);
+      toast.success(data.message, {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
     } catch (error) {
-      console.error("Error deleting order:", error);
+      console.error('Error deleting order:', error);
     }
   };
 
   return (
-    <div className="flex flex-col h-screen justify-end ">
-      <h1 className="text-5xl font-semibold my-auto mx-4">Order Lists</h1>
+    <div className="flex flex-col h-full justify-start items-center">
+      <div className="flex justify-between items-center w-full">
+        <h1 className="text-5xl font-semibold my-10 mx-4">Order Lists</h1>
+        <button className="px-4 py-1 mr-10 rounded-lg bg-indigo-200 hover:bg-indigo-400 hover:text-textIcon transition-all">
+          Logout
+        </button>
+      </div>
       {confirmDelete && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
@@ -115,10 +150,10 @@ const AdminPage = () => {
               <input
                 type="text"
                 placeholder="First Name"
-                value={updatedOrderDatails.first_name}
+                value={updatedOrderDetails.first_name}
                 onChange={(e) =>
                   setUpdatedOrderDetails({
-                    ...updatedOrderDatails,
+                    ...updatedOrderDetails,
                     first_name: e.target.value,
                   })
                 }
@@ -127,10 +162,10 @@ const AdminPage = () => {
               <input
                 type="text"
                 placeholder="Last Name"
-                value={updatedOrderDatails.last_name}
+                value={updatedOrderDetails.last_name}
                 onChange={(e) =>
                   setUpdatedOrderDetails({
-                    ...updatedOrderDatails,
+                    ...updatedOrderDetails,
                     last_name: e.target.value,
                   })
                 }
@@ -139,10 +174,10 @@ const AdminPage = () => {
               <input
                 type="text"
                 placeholder="Phone Number"
-                value={updatedOrderDatails.phone_number}
+                value={updatedOrderDetails.phone_number}
                 onChange={(e) =>
                   setUpdatedOrderDetails({
-                    ...updatedOrderDatails,
+                    ...updatedOrderDetails,
                     phone_number: e.target.value,
                   })
                 }
@@ -151,10 +186,10 @@ const AdminPage = () => {
               <input
                 type="text"
                 placeholder="Email"
-                value={updatedOrderDatails.email}
+                value={updatedOrderDetails.email}
                 onChange={(e) =>
                   setUpdatedOrderDetails({
-                    ...updatedOrderDatails,
+                    ...updatedOrderDetails,
                     email: e.target.value,
                   })
                 }
@@ -163,10 +198,10 @@ const AdminPage = () => {
               <input
                 type="text"
                 placeholder="Order Date"
-                value={updatedOrderDatails.order_date}
+                value={updatedOrderDetails.order_date}
                 onChange={(e) =>
                   setUpdatedOrderDetails({
-                    ...updatedOrderDatails,
+                    ...updatedOrderDetails,
                     order_date: e.target.value,
                   })
                 }
@@ -175,10 +210,10 @@ const AdminPage = () => {
               <input
                 type="text"
                 placeholder="Order Time"
-                value={updatedOrderDatails.order_time}
+                value={updatedOrderDetails.order_time}
                 onChange={(e) =>
                   setUpdatedOrderDetails({
-                    ...updatedOrderDatails,
+                    ...updatedOrderDetails,
                     order_time: e.target.value,
                   })
                 }
@@ -187,10 +222,10 @@ const AdminPage = () => {
               <input
                 type="text"
                 placeholder="Slot Number"
-                value={updatedOrderDatails.slot_number}
+                value={updatedOrderDetails.slot_number}
                 onChange={(e) =>
                   setUpdatedOrderDetails({
-                    ...updatedOrderDatails,
+                    ...updatedOrderDetails,
                     slot_number: e.target.value,
                   })
                 }
@@ -199,10 +234,10 @@ const AdminPage = () => {
               <input
                 type="text"
                 placeholder="Price"
-                value={updatedOrderDatails.price}
+                value={updatedOrderDetails.price}
                 onChange={(e) =>
                   setUpdatedOrderDetails({
-                    ...updatedOrderDatails,
+                    ...updatedOrderDetails,
                     price: e.target.value,
                   })
                 }
@@ -213,7 +248,7 @@ const AdminPage = () => {
               </label>
               <select
                 id="payment"
-                value={updatedOrderDatails.payment}
+                value={updatedOrderDetails.payment}
                 onChange={(e) => setUpdatedOrderDetails(e.target.value)}
                 className="border py-1 px-2 rounded"
               >
@@ -228,10 +263,11 @@ const AdminPage = () => {
               Cancel
             </button>
             <button
-              onClick={confirmUpdateOrder}
+              onClick={() => confirmUpdateOrder(editingOrder)}
+              disabled={isLoading}
               className="px-4 py-2 bg-green-500 rounded text-white hover:bg-green-600 transition duration-200"
             >
-              Save Changes
+              {isLoading ? 'Updating' : 'Save Changes'}
             </button>
           </div>
         </div>

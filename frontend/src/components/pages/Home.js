@@ -1,6 +1,7 @@
 import '../../assets/styles/App.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Services from './Services';
 
 function Home() {
   return (
@@ -21,6 +22,7 @@ function Home() {
           Book now
         </Link>
       </div>
+      <Services />
     </div>
   );
 }

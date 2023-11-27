@@ -46,6 +46,9 @@ def create_book():
         abort(400, description="Missing payment")
     try:
         data = request.get_json()
+        order = Order.query.filter_by(phone_number=data["phone_number"]).first()
+        if order and not order.payment:
+            return jsonify({"message": "Order already exist"}), 402
         new_book = Order(
             first_name=data["first_name"],
             last_name=data["last_name"],
@@ -83,7 +86,7 @@ def get_book(id):
             return jsonify({"message": "Payment not Successful"}), 402
         else:
             return (
-                jsonify({"message": "Order successfully booked, thank you"}),
+                jsonify({"message": "Order successfully booked"}),
                 200,
             )
     except Exception as e:

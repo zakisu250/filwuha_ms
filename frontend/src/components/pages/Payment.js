@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import createOrder, { checkPaymentStatus } from '../../apis/utils';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function Payment() {
@@ -59,7 +59,6 @@ function Payment() {
         }
         setIsLoading(false);
       } catch (error) {
-        console.log(error);
         setIsPaying(false);
         setIsLoading(false);
         setMessage(error.message);
@@ -67,10 +66,20 @@ function Payment() {
     } else {
       try {
         const data = await checkPaymentStatus(paymentId);
-        if (data && data?.payment) {
+        if (data) {
+          console.log(data);
           setPaymentStatus(true);
           setIsPaying(false);
-          setMessage(data.message);
+          toast.success(data.message, {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+          });
           navigate('/receipt', { state: formData });
         } else {
           setPaymentStatus(false);
@@ -78,7 +87,6 @@ function Payment() {
           setMessage(data.message);
         }
       } catch (error) {
-        console.log(error);
         setMessage(error.message);
       }
       setIsLoading(false);

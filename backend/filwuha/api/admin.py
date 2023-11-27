@@ -1,6 +1,6 @@
 from flask import jsonify, request, abort
 from flask import Blueprint
-from flask_login import login_user
+from filwuha.api.utils import generate_token
 from filwuha.models import Order
 from filwuha.models import Admin
 from filwuha.models import db
@@ -57,15 +57,15 @@ def validate_request(required_fields):
 @admin_bp.route("/admin/login", methods=["POST"], strict_slashes=False)
 def login():
     try:
-        required_fields = ["username", "password_hash"]
+        required_fields = ["username", "password"]
         data = validate_request(required_fields)
         admin_obj = Admin.query.filter_by(username=data["username"]).first()
-        if not admin_obj or not admin_obj.check_password(data["password_hash"]):
-            abort(401, description="Invalid username or password")
-        # login_user(admin_obj)
-        return jsonify({"message": "Admin Login Successful"}), 200
+        if not admin_obj or not admin_obj.check_password(data["password"]):
+            return jsonify({"message": "Invalid username or password"}), 404
+        token = generate_token(admin_obj.admin_id)
+        return jsonify({"token": token, "message": "Admin login successful"}), 200
     except Exception as e:
-        return jsonify(Error=str(e)), 404
+        return jsonify(str(e)), 404
 
 
 @admin_bp.route("/admin/orders/<id>", methods=["PUT"], strict_slashes=False)
@@ -82,6 +82,6 @@ def update_order(id):
         order_obj.price = data["price"]
         order_obj.payment = data["payment"]
         db.session.commit()
-        return jsonify(order_obj.serialize()), 200
+        return jsonify({"message": "Order successfully updated"}), 200
     except Exception as e:
         return jsonify(Error=str(e)), 404

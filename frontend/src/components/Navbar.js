@@ -10,8 +10,8 @@ function Navbar() {
       : 'hover:scale-105';
   };
   return (
-    <nav className="bg-gray-300 sticky w-full h-20 mt-5 shadow-lg border transition-all">
-      <div className="container mx-auto flex justify-between items-center h-full">
+    <nav className="bg-gray-300 sticky top-0 w-full h-20 shadow-lg border transition-all">
+      <div className="mx-auto flex justify-between items-center h-full">
         <Link to="/" className="flex items-center py-3 px-8">
           <h1 className="text-4xl font-bold text-blue-950">FILEWUHA</h1>
         </Link>
