@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import createOrder, { checkPaymentStatus } from '../../apis/utils';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 function Payment() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ function Payment() {
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentId, setPaymentId] = useState('');
+  const [paymentId, setPaymentId] = useState("");
   const [message, setMessage] = useState(false);
 
   const handlePay = async (e) => {
@@ -104,19 +103,14 @@ function Payment() {
           <li className="flex justify-between py-2">
             <p>Name:</p>
             <span>
-              <strong>
-                {formData.firstName} {formData.lastName}
-              </strong>
-            </span>{' '}
+              {formData.firstName} {formData.lastName}
+            </span>{" "}
           </li>
 
           <li className="flex justify-between py-2">
             <p>Product:</p>
-            <span>
-              <strong>{formData.service}</strong>
-            </span>
+            <span>{formData.service}</span>
           </li>
-
           {formData.email && (
             <li className="flex justify-between py-2">
               <p>Email:</p>
@@ -126,50 +120,42 @@ function Payment() {
 
           <li className="flex justify-between py-2">
             <p>Phone number:</p>
-            <span>
-              <strong>{formData.phone}</strong>
-            </span>
+            <span>{formData.phone}</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Date:</p>
-            <span>
-              <strong>{formData.orderDate}</strong>
-            </span>
+            <span>{formData.orderDate}</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Time:</p>
-            <span>
-              <strong>{formData.orderTime}</strong>
-            </span>
+            <span>{formData.orderTime}</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Slot:</p>
-            <span>
-              <strong>{formData.slot}</strong>
-            </span>
+            <span>{formData.slot}</span>
+          </li>
+          <li className="flex justify-between py-2">
+            <p>Account:</p>
+            <span>CBE: 123456789</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Price:</p>
-            <span>
-              <strong>100 ETB</strong>
-            </span>
+            <span>100 ETB</span>
           </li>
 
           <li className="flex justify-between py-2">
             <p>Payment Status:</p>
-            <span>
-              <strong>{paymentStatus ? 'Paid' : 'Not Paid'}</strong>
-            </span>
+            <span>{paymentStatus ? "Paid" : "Not Paid"}</span>
           </li>
         </ul>
         {message && <p className="text-red-500 py-3">{message}</p>}
         <p>{paymentStatus}</p>
         <button
-          className="w-full my-5 px-8 py-2 rounded-lg bg-slate-300 hover:bg-slate-500 hover:text-white transition-all"
+          className="w-1/3 my-5 px-8 py-2 rounded-lg bg-slate-300 hover:bg-slate-500 hover:text-white transition-all"
           disabled={isLoading}
           onClick={handlePay}
         >

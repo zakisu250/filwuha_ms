@@ -6,31 +6,31 @@ function Book() {
   const navigate = useNavigate();
 
   const timeIntervals = [
-    '08:00 AM - 09:00 AM',
-    '09:00 AM - 10:00 AM',
-    '10:00 AM - 11:00 AM',
-    '11:00 AM - 12:00 PM',
-    '01:00 PM - 02:00 PM',
-    '02:00 PM - 03:00 PM',
-    '03:00 PM - 04:00 PM',
-    '04:00 PM - 05:00 PM',
+    "08:00 AM - 09:00 AM",
+    "09:00 AM - 10:00 AM",
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "01:00 PM - 02:00 PM",
+    "02:00 PM - 03:00 PM",
+    "03:00 PM - 04:00 PM",
+    "04:00 PM - 05:00 PM",
   ];
   const [reservedSlots, setReservedSlots] = useState({});
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: '',
-    orderDate: '',
-    orderTime: '',
-    slot_number: '',
+    firstName: "",
+    lastName: "",
+    phone: "",
+    email: "",
+    orderDate: "",
+    orderTime: "",
+    slot: "",
   });
   const [message, setMessage] = useState('');
-
-  let today = new Date().toISOString().split('T')[0];
+  let today = new Date().toISOString().split("T")[0];
+  
   let lastDate = new Date();
   lastDate.setDate(lastDate.getDate() + 30);
-  lastDate = lastDate.toISOString().split('T')[0];
+  lastDate = lastDate.toISOString().split("T")[0];
 
   useEffect(() => {
     const fetchReservedSlots = async () => {
@@ -43,7 +43,6 @@ function Book() {
         setMessage(error);
       }
     };
-
     fetchReservedSlots();
   }, [formData]);
 
@@ -78,7 +77,7 @@ function Book() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/payment', { state: formData });
+    navigate("/payment", { state: formData });
   };
 
   return (
@@ -181,7 +180,7 @@ function Book() {
               required
             />
             <label htmlFor="terms">
-              I agree to the{' '}
+              I agree to the{" "}
               <a
                 href="/terms"
                 className="text-blue-500 hover:text-blue-600 transition duration-500 ease-in-out"
