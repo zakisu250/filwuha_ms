@@ -52,9 +52,7 @@ export default function Receipt() {
   return (
     <div className="receipt">
       <div className="flex flex-col justify-center items-center h-1/2 text-xl w-1/2 mx-auto p-5 border border-y-primaryText">
-        <h2 className="font-bold text-center text-4xl mb-10 w-full">
-          Payment Page
-        </h2>
+        <h2 className="font-bold text-center text-4xl mb-10 w-full">Receipt</h2>
         <p className="text-left w-full mb-2 font-bold">Order Summary:</p>
         <ul className="text-left w-full">
           <li className="flex justify-between py-2">
