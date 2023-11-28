@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { checkReservedSlots } from '../../apis/utils';
+import LoadingSVG from '../../assets/images/Loading.svg';
 
 function Book() {
   const navigate = useNavigate();
+  const [errorField, setErrorField] = useState('');
 
   const timeIntervals = [
     '08:00 AM - 09:00 AM',
@@ -26,30 +28,7 @@ function Book() {
     slot: '',
   });
   const [message, setMessage] = useState('');
-  let today = new Date().toISOString().split('T')[0];
-
-  let lastDate = new Date();
-  lastDate.setDate(lastDate.getDate() + 30);
-  lastDate = lastDate.toISOString().split('T')[0];
-
-  useEffect(() => {
-    const fetchReservedSlots = async () => {
-      try {
-        const response = await checkReservedSlots(formData);
-        setReservedSlots(response);
-      } catch (error) {
-        console.error(error);
-        setReservedSlots({});
-        setMessage(error);
-      }
-    };
-    fetchReservedSlots();
-  }, [formData]);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
   const filterUnavailableSlots = () => {
     const selectedDateSlots = reservedSlots[formData.orderDate];
@@ -75,9 +54,76 @@ function Book() {
 
   const filteredSlots = filterUnavailableSlots();
 
+  let today = new Date().toISOString().split('T')[0];
+
+  let lastDate = new Date();
+  lastDate.setDate(lastDate.getDate() + 30);
+  lastDate = lastDate.toISOString().split('T')[0];
+
+  useEffect(() => {
+    const fetchReservedSlots = async () => {
+      try {
+        const response = await checkReservedSlots(formData);
+        setReservedSlots(response);
+      } catch (error) {
+        console.error(error);
+        setReservedSlots({});
+        setMessage(error);
+      }
+    };
+    fetchReservedSlots();
+  }, [formData]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateFormData = (data) => {
+    const phoneRegex = /^(07|09)\d{8}$/;
+    if (!data.firstName || data.firstName.length < 3) {
+      setMessage('First name must be at least 4 characters long');
+      setErrorField('firstName');
+      return false;
+    }
+    if (!data.lastName || data.lastName.length < 3) {
+      setMessage('Last name must be at least 4 characters long');
+      setErrorField('lastName');
+      return false;
+    }
+    if (!data.phone || data.phone.length < 10) {
+      setMessage('Phone number must be at least 10 characters long');
+      setErrorField('phone');
+      return false;
+    }
+    if (!phoneRegex.test(data.phone)) {
+      setMessage('Invalid phone number');
+      setErrorField('phone');
+      return false;
+    }
+    if (!data.lastName || !data.phone) {
+      setMessage('Error input data');
+      return false;
+    }
+    setErrorField('');
+    return true;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/payment', { state: formData });
+    setIsLoading(true);
+    try {
+      if (validateFormData(formData)) {
+        navigate('/payment', { state: formData });
+      } else {
+        setMessage(`Invalid ${errorField}`);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setMessage('Error submitting form. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -85,14 +131,16 @@ function Book() {
       <div className="max-w-md mx-auto p-6 border rounded-md shadow-md">
         <h2 className="text-xl font-semibold mb-4">Booking</h2>
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 ">
             <input
               type="text"
               name="firstName"
               value={formData.firstName}
               onChange={handleInputChange}
               placeholder="First Name"
-              className="border rounded-md p-2"
+              className={`border rounded-md p-2 ${
+                errorField === 'firstName' ? 'border-red-500' : ''
+              }`}
               required
             />
             <input
@@ -101,7 +149,9 @@ function Book() {
               value={formData.lastName}
               onChange={handleInputChange}
               placeholder="Last Name"
-              className="border rounded-md p-2"
+              className={`border rounded-md p-2 ${
+                errorField === 'lastName' ? 'border-red-500' : ''
+              }`}
               required
             />
             <input
@@ -110,7 +160,9 @@ function Book() {
               value={formData.phone}
               onChange={handleInputChange}
               placeholder="Phone"
-              className="border rounded-md p-2"
+              className={`border rounded-md p-2 ${
+                errorField === 'phone' ? 'border-red-500' : ''
+              }`}
               required
             />
             <input
@@ -190,13 +242,24 @@ function Book() {
               </a>
             </label>
           </div>
-          {message && <p className="text-red-500">{message}</p>}
+          {message && (
+            <p className="text-red-500 text-center mt-5">{message}</p>
+          )}
           <div className="flex justify-center">
             <button
               type="submit"
               className="bg-blue-500 text-white font-semibold text-lg rounded-lg px-10 py-2 mt-9 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-100 hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-opacity-50"
+              disabled={isLoading}
             >
-              Book
+              {isLoading ? (
+                <img
+                  src={LoadingSVG}
+                  alt="Loading"
+                  className="w-6 h-6 inline"
+                />
+              ) : (
+                'Book'
+              )}
             </button>
           </div>
         </form>

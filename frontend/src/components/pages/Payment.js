@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import createOrder, { checkPaymentStatus } from '../../apis/utils';
 import { toast } from 'react-toastify';
+import LoadingSVG from '../../assets/images/Loading.svg';
 import 'react-toastify/dist/ReactToastify.css';
 function Payment() {
   const location = useLocation();
@@ -72,7 +73,6 @@ function Payment() {
   const handleCheck = async () => {
     try {
       const data = await checkPaymentStatus(paymentId);
-      console.log(data);
       if (data) {
         setPaymentStatus(true);
         setIsPaying(false);
@@ -164,7 +164,13 @@ function Payment() {
           disabled={isLoading}
           onClick={handlePay}
         >
-          {isLoading ? 'Loading...' : isPaying ? 'Proceed with payment' : 'Pay'}
+          {isLoading ? (
+            <img src={LoadingSVG} alt="Loading" className="w-6 h-6 inline" />
+          ) : isPaying ? (
+            'Proceed with payment'
+          ) : (
+            'Pay'
+          )}
         </button>
       </div>
     </div>
