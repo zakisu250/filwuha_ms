@@ -7,6 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { fetchOrders, updateOrder, deleteOrder } from '../../apis/utils';
 import { toast } from 'react-toastify';
+import { jwtDecode as jwt_decode } from 'jwt-decode';
 
 const AdminPage = () => {
   const [orders, setOrders] = useState([]);
@@ -24,14 +25,38 @@ const AdminPage = () => {
     price: 100,
     payment: false,
   });
+  const [userData, setUserData] = useState(null);
+
+  const token = localStorage.getItem('token');
+  useEffect(() => {
+    try {
+      if (token) {
+        const decodedToken = jwt_decode(token);
+        const userRole = decodedToken.sub.username;
+        const isValidUserRole = ['zaki', 'admin'].includes(userRole);
+
+        if (isValidUserRole) {
+          setUserData(userRole);
+        }
+      } else {
+        setUserData(null);
+        window.location.href = '/admin';
+      }
+    } catch (error) {
+      console.error('Error checking user role:', error);
+      setUserData(null);
+      window.location.href = '/unauthorized';
+    }
+  }, [token]);
 
   useEffect(() => {
     const fetchData = async function () {
       const response = await fetchOrders();
+      console.log(response);
       setOrders(response.Orders);
     };
     fetchData();
-  }, [confirmDelete]);
+  }, [confirmDelete, updatedOrderDetails]);
 
   const handleUpdateOrder = (orderId) => {
     setEditingOrder(orderId);
@@ -45,21 +70,20 @@ const AdminPage = () => {
       order_time: order.order_time,
       slot_number: order.slot_number,
       price: order.price,
-      payment: order.payment,
+      payment: order.payment === true ? '1' : '0',
     });
   };
 
   const confirmUpdateOrder = async (orderId) => {
     setIsLoading(true);
     try {
-      setOrders(
-        orders.map((order) =>
-          order.order_id === orderId
-            ? { ...order, ...updatedOrderDetails }
-            : order
-        )
-      );
       const data = await updateOrder(orderId, updatedOrderDetails);
+      const updatedOrders = orders.map((order) =>
+        order.order_id === orderId
+          ? { ...order, ...updatedOrderDetails }
+          : order
+      );
+      setOrders(updatedOrders);
       setEditingOrder(null);
       toast.success(data.message, {
         position: 'top-center',
@@ -73,6 +97,7 @@ const AdminPage = () => {
       });
     } catch (error) {
       console.error('Error updating order:', error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -85,13 +110,7 @@ const AdminPage = () => {
   const confirmDeleteOrder = async (orderId) => {
     try {
       const data = await deleteOrder(orderId);
-      setOrders(
-        orders.map((order) =>
-          order.order_id === editingOrder
-            ? { ...order, ...updatedOrderDetails }
-            : order
-        )
-      );
+      setOrders(orders.filter((order) => order.order_id !== orderId));
       setConfirmDelete(null);
       toast.success(data.message, {
         position: 'top-center',
@@ -105,14 +124,21 @@ const AdminPage = () => {
       });
     } catch (error) {
       console.error('Error deleting order:', error);
+      throw error;
     }
   };
 
-  return (
+  return userData ? (
     <div className="flex flex-col h-full justify-start items-center">
       <div className="flex justify-between items-center w-full">
         <h1 className="text-5xl font-semibold my-10 mx-4">Order Lists</h1>
-        <button className="px-4 py-1 mr-10 rounded-lg bg-indigo-200 hover:bg-indigo-400 hover:text-textIcon transition-all">
+        <button
+          className="px-4 py-1 mr-10 rounded-lg bg-indigo-200 hover:bg-indigo-400 hover:text-textIcon transition-all"
+          onClick={() => {
+            localStorage.removeItem('token');
+            window.location.href = '/admin';
+          }}
+        >
           Logout
         </button>
       </div>
@@ -249,11 +275,16 @@ const AdminPage = () => {
               <select
                 id="payment"
                 value={updatedOrderDetails.payment}
-                onChange={(e) => setUpdatedOrderDetails(e.target.value)}
+                onChange={(e) => {
+                  setUpdatedOrderDetails({
+                    ...updatedOrderDetails,
+                    payment: e.target.value === '1' ? true : false,
+                  });
+                }}
                 className="border py-1 px-2 rounded"
               >
-                <option value="true">Paid</option>
-                <option value="false">Unpaid</option>
+                <option value="1">Paid</option>
+                <option value="0">Unpaid</option>
               </select>
             </div>
             <button
@@ -335,6 +366,8 @@ const AdminPage = () => {
         </tbody>
       </table>
     </div>
+  ) : (
+    ' '
   );
 };
 

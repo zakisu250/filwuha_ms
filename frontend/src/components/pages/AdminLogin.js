@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ReactComponent as LoadingIcon } from '../../assets/images/Loading.svg';
 import { toast } from 'react-toastify';
 import { loginAdmin } from '../../apis/utils';
 import { useNavigate } from 'react-router';
@@ -7,7 +8,6 @@ const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [userData, setUserData] = useState(null);
 
   const navigate = useNavigate();
 
@@ -16,6 +16,7 @@ const AdminLogin = () => {
     setIsLoading(true);
     try {
       const response = await loginAdmin({ username, password });
+      console.log(response);
       if (response && response.message) {
         toast.success(response.message, {
           position: 'top-center',
@@ -28,8 +29,7 @@ const AdminLogin = () => {
           theme: 'light',
         });
         localStorage.setItem('token', response.token);
-        setUserData(response);
-        navigate('/admin/home', { state: response.token });
+        navigate('/admin/home');
       } else {
         const error = response.data;
         toast.error(error.message, {
@@ -42,9 +42,12 @@ const AdminLogin = () => {
           progress: undefined,
           theme: 'light',
         });
+        throw error;
       }
     } catch (error) {
-      toast.error('Login failed. Please try again', {
+      const err = error.response.data;
+      console.log(err);
+      toast.error(err.message, {
         position: 'top-center',
         autoClose: 5000,
         hideProgressBar: false,
@@ -61,7 +64,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="max-w-md w-full bg-white p-8 rounded shadow-lg">
+      <div className="max-w-lg w-full bg-white p-8 rounded shadow-xl">
         <h2 className="text-2xl font-semibold mb-6 text-center">Admin Login</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
@@ -95,7 +98,13 @@ const AdminLogin = () => {
             disabled={isLoading}
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
           >
-            {isLoading ? 'Logging in' : 'Login'}
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <LoadingIcon className="w-6 h-6 mr-2 bg-blue-500" />
+              </div>
+            ) : (
+              'Login'
+            )}
           </button>
         </form>
       </div>

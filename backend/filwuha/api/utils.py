@@ -3,11 +3,11 @@ import datetime
 from decouple import config
 
 
-def generate_token(adminId):
+def generate_token(admin):
     payload = {
         "exp": datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=30),
         "iat": datetime.datetime.utcnow(),
-        "sub": adminId,
+        "sub": admin,
     }
     token = jwt.encode(payload, config("SECRET_KEY"), algorithm="HS256")
 

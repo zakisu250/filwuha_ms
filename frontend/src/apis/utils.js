@@ -77,10 +77,12 @@ export async function loginAdmin(adminData) {
       const data = response.data;
       return data;
     } else {
-      return response;
+      console.log(response.data);
+      return response.data;
     }
   } catch (error) {
-    return error;
+    console.log(error);
+    return error.message;
   }
 }
 

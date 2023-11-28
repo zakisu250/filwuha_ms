@@ -62,7 +62,12 @@ def login():
         admin_obj = Admin.query.filter_by(username=data["username"]).first()
         if not admin_obj or not admin_obj.check_password(data["password"]):
             return jsonify({"message": "Invalid username or password"}), 404
-        token = generate_token(admin_obj.admin_id)
+        admin_data = {
+            "id": admin_obj.admin_id,
+            "username": admin_obj.username,
+            "email": admin_obj.created_at.isoformat() if admin_obj.created_at else None,
+        }
+        token = generate_token(admin_data)
         return jsonify({"token": token, "message": "Admin login successful"}), 200
     except Exception as e:
         return jsonify(str(e)), 404

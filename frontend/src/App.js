@@ -12,6 +12,7 @@ import AdminLogin from './components/pages/AdminLogin';
 import AdminPage from './components/pages/AdminPage';
 import Layout from './components/Layout';
 import Receipt from './components/pages/Receipt';
+import Unauthorized from './components/pages/Unauthorized';
 import { ToastContainer } from 'react-toastify';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="home" element={<AdminPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
+        <Route path="unauthorized" element={<Unauthorized />} />
       </Routes>
       <ToastContainer
         position="top-center"
