@@ -1,8 +1,11 @@
-import { useLocation } from "react-router-dom";
-import React, { useState } from "react";
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import createOrder, { checkPaymentStatus } from '../../apis/utils';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function Payment() {
   const location = useLocation();
+  const navigate = useNavigate();
   const formData = location.state;
   const {
     firstName: first_name,
@@ -11,7 +14,7 @@ function Payment() {
     phone: phone_number,
     orderDate: order_date,
     orderTime: order_time,
-    slot,
+    slot_number,
   } = formData;
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
@@ -24,69 +27,77 @@ function Payment() {
     setIsLoading(true);
     if (!isPaying) {
       try {
-        // Make a post request to the payment API
-        setIsLoading(true);
-        const response = await fetch("http://127.0.0.1:5000/api/v1/book", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            first_name,
-            last_name,
-            email,
-            phone_number,
-            order_date,
-            order_time,
-            slot_number: slot,
-            price: 100,
-            payment: false,
-          }),
+        const data = await createOrder({
+          first_name,
+          last_name,
+          email,
+          phone_number,
+          order_date,
+          order_time,
+          slot_number,
+          price: 100,
+          payment: false,
         });
-        // Handle the response from the payment API
-        const data = await response?.json();
         if (!data?.payment) {
           setPaymentStatus(false);
           setPaymentId(data?.order_id);
           setIsPaying(true);
+          toast.info(data.message, {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+          });
         } else {
           setPaymentStatus(true);
           setIsPaying(false);
         }
         setIsLoading(false);
       } catch (error) {
-        // Handle any errors that occur during the Pay post request
-        console.log(error);
         setIsPaying(false);
         setIsLoading(false);
+        setMessage(error.message);
       }
     } else {
       try {
-        const response = await fetch(
-          `http://127.0.0.1:5000/api/v1/book/${paymentId}`
-        );
-        const data = await response?.json();
-        if (data?.payment) {
+        const data = await checkPaymentStatus(paymentId);
+        if (data) {
+          console.log(data);
           setPaymentStatus(true);
           setIsPaying(false);
-          setMessage("Payment Successful");
+          toast.success(data.message, {
+            position: 'top-center',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'light',
+          });
+          navigate('/receipt', { state: formData });
         } else {
           setPaymentStatus(false);
           setIsPaying(true);
-          setMessage("Payment Not Successful");
+          setMessage(data.message);
         }
       } catch (error) {
-        console.log(error);
+        setMessage(error.message);
       }
       setIsLoading(false);
     }
   };
-  console.log(paymentId, message);
 
   return (
-    <div className="flex">
-      <div className="flex flex-col justify-center items-center h-1/2 w-1/3 mx-auto mt-28 p-8 border mb-2 border-y-primaryText">
-        <h4 className="text-center text-4xl mb-10 w-full">Payment Page</h4>
+    <div className="flex mt-10">
+      <div className="flex flex-col justify-center items-center h-1/2 text-xl w-1/2 mx-auto p-5 border border-y-primaryText">
+        <h2 className="font-bold text-center text-4xl mb-10 w-full">
+          Payment Page
+        </h2>
         <p className="text-left w-full mb-2 font-bold">Order Summary:</p>
         <ul className="text-left w-full">
           <li className="flex justify-between py-2">
@@ -141,13 +152,14 @@ function Payment() {
             <span>{paymentStatus ? "Paid" : "Not Paid"}</span>
           </li>
         </ul>
+        {message && <p className="text-red-500 py-3">{message}</p>}
         <p>{paymentStatus}</p>
         <button
-          className="w-1/3 justify-end mt-3 mb-auto py-1 rounded-lg bg-slate-300 hover:bg-slate-500 hover:text-white transition-all"
+          className="w-1/3 my-5 px-8 py-2 rounded-lg bg-slate-300 hover:bg-slate-500 hover:text-white transition-all"
           disabled={isLoading}
           onClick={handlePay}
         >
-          {isLoading ? "..." : isPaying ? "Check" : "Pay"}
+          {isLoading ? 'Loading...' : isPaying ? 'Proceed with payment' : 'Pay'}
         </button>
       </div>
     </div>

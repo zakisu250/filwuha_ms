@@ -1,34 +1,61 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
+import { loginAdmin } from '../../apis/utils';
+import { useNavigate } from 'react-router';
 
 const AdminLogin = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/v1/admin/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          password_hash: password, // Assuming you hash the password client-side
-        }),
-      });
-
-      if (response.ok) {
-        // Redirect to the admin page upon successful login
-        window.location.href = "/admin/home"; // Replace with your admin page route
+      const response = await loginAdmin({ username, password });
+      if (response && response.message) {
+        toast.success(response.message, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        localStorage.setItem('token', response.token);
+        setUserData(response);
+        navigate('/admin/home', { state: response.token });
       } else {
-        // Handle authentication failure
-        const errorData = await response.json();
-        console.log("Login failed:", errorData.message); // Log the error message
-        // You can display an error message to the user as well
+        const error = response.data;
+        toast.error(error.message, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
       }
     } catch (error) {
-      console.error("Error during login:", error);
+      toast.error('Login failed. Please try again', {
+        position: 'top-center',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -65,9 +92,10 @@ const AdminLogin = () => {
           </div>
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
           >
-            Login
+            {isLoading ? 'Logging in' : 'Login'}
           </button>
         </form>
       </div>

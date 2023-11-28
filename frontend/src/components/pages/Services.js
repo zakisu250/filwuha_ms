@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 function Services() {
   return (
     <div className="flex flex-col justify-center items-center">
-      <div className="flex flex-col mt-20">
+      <div className="flex flex-col">
         <h1 className="text-5xl font-bold text-center mt-10">Our Services</h1>
         <ul className="mt-5 flex flex-col px-20">
           <li className="flex bg-center w-full h-96 mt-10">
@@ -82,14 +82,14 @@ function Services() {
             </div>
             <span className="w-1/2 flex-1 bg-[url('../../assets/images/steam-bath.jpg')] bg-cover bg-center rounded-tr-xl rounded-br-xl shadow-xl"></span>
           </li>
-          <li className="flex flex-1 flex-col justify-center items-center mt-20 bg-accentColor rounded-2xl mb-10 p-5 shadow-lg">
+          <li className="flex flex-1 flex-col justify-center items-center mt-20 bg-accentColor/60 rounded-2xl mb-10 p-5 shadow-lg">
             <h1 className="text-3xl px-5 py-1">Checkout our packages</h1>
             <div className="flex justify-between w-1/2">
               <Link className="flex flex-col justify-center items-center p-5 bg-gray-200 rounded-xl border mx-5 mt-5 w-full hover:scale-105 hover:text-2xl hover:font-bold transition-all">
-                <h1 className="text-3xl text-center">Sauna-bath package</h1>
+                <h1 className="text-xl text-center">Sauna-bath package</h1>
               </Link>
               <Link className="flex flex-col justify-center items-center p-5 bg-gray-200 rounded-xl border mx-5 mt-5 w-full hover:scale-105 hover:text-2xl hover:font-bold transition-all">
-                <h1 className="text-3xl text-center">Steam-bath package</h1>
+                <h1 className="text-xl text-center">Steam-bath package</h1>
               </Link>
             </div>
           </li>
