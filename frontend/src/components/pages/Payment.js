@@ -63,32 +63,37 @@ function Payment() {
         setMessage(error.message);
       }
     } else {
-      try {
-        const data = await checkPaymentStatus(paymentId);
-        if (data) {
-          console.log(data);
-          setPaymentStatus(true);
-          setIsPaying(false);
-          toast.success(data.message, {
-            position: 'top-center',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light',
-          });
-          navigate('/receipt', { state: formData });
-        } else {
-          setPaymentStatus(false);
-          setIsPaying(true);
-          setMessage(data.message);
-        }
-      } catch (error) {
-        setMessage(error.message);
-      }
+      handleCheck();
       setIsLoading(false);
+    }
+    setIsLoading(false);
+  };
+
+  const handleCheck = async () => {
+    try {
+      const data = await checkPaymentStatus(paymentId);
+      console.log(data);
+      if (data) {
+        setPaymentStatus(true);
+        setIsPaying(false);
+        toast.success(data.message, {
+          position: 'top-center',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        });
+        navigate('/receipt', { state: formData });
+      } else {
+        setPaymentStatus(false);
+        setIsPaying(true);
+        setMessage(data.message);
+      }
+    } catch (error) {
+      setMessage(error.message);
     }
   };
 
@@ -155,7 +160,7 @@ function Payment() {
         {message && <p className="text-red-500 py-3">{message}</p>}
         <p>{paymentStatus}</p>
         <button
-          className="w-1/3 my-5 px-8 py-2 rounded-lg bg-slate-300 hover:bg-slate-500 hover:text-white transition-all"
+          className="w-full my-5 px-8 font-bold py-2 rounded-lg bg-slate-300 hover:bg-slate-500 hover:text-white transition-all"
           disabled={isLoading}
           onClick={handlePay}
         >

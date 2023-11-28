@@ -177,6 +177,7 @@ function Book() {
               name="terms"
               onChange={handleInputChange}
               className="mr-2"
+              id="terms"
               required
             />
             <label htmlFor="terms">
