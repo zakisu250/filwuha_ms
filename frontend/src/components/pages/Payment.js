@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import createOrder, { checkPaymentStatus } from '../../apis/utils';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 function Payment() {
   const location = useLocation();
@@ -14,12 +14,12 @@ function Payment() {
     phone: phone_number,
     orderDate: order_date,
     orderTime: order_time,
-    slot_number,
+    slot: slot_number,
   } = formData;
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentId, setPaymentId] = useState("");
+  const [paymentId, setPaymentId] = useState('');
   const [message, setMessage] = useState(false);
 
   const handlePay = async (e) => {
@@ -104,7 +104,7 @@ function Payment() {
             <p>Name:</p>
             <span>
               {formData.firstName} {formData.lastName}
-            </span>{" "}
+            </span>{' '}
           </li>
 
           <li className="flex justify-between py-2">
@@ -149,7 +149,7 @@ function Payment() {
 
           <li className="flex justify-between py-2">
             <p>Payment Status:</p>
-            <span>{paymentStatus ? "Paid" : "Not Paid"}</span>
+            <span>{paymentStatus ? 'Paid' : 'Not Paid'}</span>
           </li>
         </ul>
         {message && <p className="text-red-500 py-3">{message}</p>}
