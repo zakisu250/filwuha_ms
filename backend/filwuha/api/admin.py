@@ -62,7 +62,7 @@ def login():
         data = validate_request(required_fields)
         admin_obj = Admin.query.filter_by(username=data["username"]).first()
         if not admin_obj or not bcrypt.check_password_hash(
-            admin_obj.password, data["password"]
+            admin_obj.password_hash, data["password"]
         ):
             return jsonify({"message": "Invalid username or password"}), 404
         admin_data = {
