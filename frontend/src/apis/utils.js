@@ -1,7 +1,8 @@
 import axios from 'axios';
-const BASE_URL = 'http://127.0.0.1:5000/api/v1';
-const LOGIN_URL = 'http://127.0.0.1:5000/api/v1/admin/login';
-const CHECK_SLOTS_URL = 'http://localhost:5000/api/v1/reserved_slots';
+const BASE_URL = 'https://filwuha-api.onrender.com/api/v1';
+const LOGIN_URL = 'https://filwuha-api.onrender.com/api/v1/admin/login';
+const CHECK_SLOTS_URL =
+  'https://filwuha-api.onrender.com/api/v1/reserved_slots';
 
 export async function checkReservedSlots() {
   try {
@@ -14,7 +15,7 @@ export async function checkReservedSlots() {
     }
   } catch (error) {
     console.error('Error-message', error);
-    throw error;
+    throw error.response;
   }
 }
 
