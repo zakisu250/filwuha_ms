@@ -1,9 +1,12 @@
 from flask import Flask
 from flask_cors import CORS
 from decouple import config
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+bcrypt = Bcrypt(app)
 
 
 @app.route("/")

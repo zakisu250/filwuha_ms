@@ -1,5 +1,6 @@
 from flask import jsonify, request, abort
 from flask import Blueprint
+from filwuha import bcrypt
 from filwuha.api.utils import generate_token
 from filwuha.models import Order
 from filwuha.models import Admin
@@ -60,7 +61,9 @@ def login():
         required_fields = ["username", "password"]
         data = validate_request(required_fields)
         admin_obj = Admin.query.filter_by(username=data["username"]).first()
-        if not admin_obj or not admin_obj.check_password(data["password"]):
+        if not admin_obj or not bcrypt.check_password_hash(
+            admin_obj.password, data["password"]
+        ):
             return jsonify({"message": "Invalid username or password"}), 404
         admin_data = {
             "id": admin_obj.admin_id,
