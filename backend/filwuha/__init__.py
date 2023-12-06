@@ -22,7 +22,8 @@ MYSQL_DB = config("MYSQL_DB")
 
 app.config[
     "SQLALCHEMY_DATABASE_URI"
-] = f"mysql+mysqldb://{MYSQL_USER}:{MYSQL_PASS}@{MYSQL_HOST}:3306/{MYSQL_DB}"
+] = f"mysql+mysqldb://{MYSQL_USER}:{MYSQL_PASS}@{MYSQL_HOST}:3306/{MYSQL_DB}?ssl=REQUIRED"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 from filwuha.api.admin import admin_bp
 from filwuha.api.book import book_bp
