@@ -13,6 +13,6 @@ def generate_token(admin):
         payload,
         config("SECRET_KEY"),
         algorithm="HS256",
-    ).decode("utf-8")
+    )
 
     return token
