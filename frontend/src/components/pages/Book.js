@@ -114,7 +114,11 @@ function Book() {
     setIsLoading(true);
     try {
       if (validateFormData(formData)) {
-        navigate('/payment', { state: formData });
+        const formattedFormData = {
+          ...formData,
+          orderTime: `${formData.orderTime.split(' ')[0]}:00`,
+        };
+        navigate('/payment', { state: formattedFormData });
       } else {
         setMessage(`Invalid ${errorField}`);
       }
