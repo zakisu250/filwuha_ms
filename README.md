@@ -4,11 +4,11 @@ Our project aims to bring a solution for customers that rely on being present on
 
 Table of Contents
 
-    ##Installation
-    ##Usage
-    ##Endpoints
-    ##Technologies Used
-    ##Contributing
+    ## Installation
+    ## Usage
+    ## Endpoints
+    ## Technologies Used
+    ## Contributing
 
 ## Installation
 
