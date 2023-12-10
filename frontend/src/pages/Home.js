@@ -1,4 +1,4 @@
-import '../../assets/styles/App.css';
+import '../assets/styles/App.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Services from './Services';

@@ -5,7 +5,7 @@ import {
   faCheckCircle,
   faTimesCircle,
 } from '@fortawesome/free-solid-svg-icons';
-import { fetchOrders, updateOrder, deleteOrder } from '../../apis/utils';
+import { fetchOrders, updateOrder, deleteOrder } from '../apis/utils';
 import { toast } from 'react-toastify';
 import { jwtDecode as jwt_decode } from 'jwt-decode';
 

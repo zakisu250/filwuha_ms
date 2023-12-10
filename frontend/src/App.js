@@ -1,18 +1,18 @@
 import React from 'react';
 import './assets/styles/App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './components/pages/Home';
-import About from './components/pages/About';
-import Services from './components/pages/Services';
-import Contact from './components/pages/Contact';
-import Book from './components/pages/Book';
-import NotFound from './components/pages/NotFound';
-import Payment from './components/pages/Payment';
-import AdminLogin from './components/pages/AdminLogin';
-import AdminPage from './components/pages/AdminPage';
+import Home from './pages/Home';
+import About from './pages/About';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
+import Book from './pages/Book';
+import NotFound from './pages/NotFound';
+import Payment from './pages/Payment';
+import AdminLogin from './pages/AdminLogin';
+import AdminPage from './pages/AdminPage';
 import Layout from './components/Layout';
-import Receipt from './components/pages/Receipt';
-import Unauthorized from './components/pages/Unauthorized';
+import Receipt from './pages/Receipt';
+import Unauthorized from './pages/Unauthorized';
 import { ToastContainer } from 'react-toastify';
 
 function App() {
@@ -32,8 +32,8 @@ function App() {
           <Route index element={<AdminLogin />} />
           <Route path="home" element={<AdminPage />} />
         </Route>
-        <Route path="*" element={<NotFound />} />
         <Route path="unauthorized" element={<Unauthorized />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <ToastContainer
         position="top-center"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { checkReservedSlots } from '../../apis/utils';
-import LoadingSVG from '../../assets/images/Loading.svg';
+import { checkReservedSlots } from '../apis/utils';
+import LoadingSVG from '../assets/images/Loading.svg';
 
 function Book() {
   const navigate = useNavigate();

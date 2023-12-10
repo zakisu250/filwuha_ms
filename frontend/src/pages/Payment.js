@@ -1,9 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
-import createOrder, { checkPaymentStatus } from '../../apis/utils';
+import createOrder, { checkPaymentStatus } from '../apis/utils';
 import { toast } from 'react-toastify';
-import LoadingSVG from '../../assets/images/Loading.svg';
+import LoadingSVG from '../assets/images/Loading.svg';
 import 'react-toastify/dist/ReactToastify.css';
+
 function Payment() {
   const location = useLocation();
   const navigate = useNavigate();

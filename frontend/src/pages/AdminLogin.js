@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { ReactComponent as LoadingIcon } from '../../assets/images/Loading.svg';
+import { ReactComponent as LoadingIcon } from '../assets/images/Loading.svg';
 import { toast } from 'react-toastify';
-import { loginAdmin } from '../../apis/utils';
+import { loginAdmin } from '../apis/utils';
 import { useNavigate } from 'react-router';
 
 const AdminLogin = () => {
