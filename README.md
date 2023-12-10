@@ -46,6 +46,7 @@ python app.py
 You will need node installed in your system:
 
 cd frontend
+
 npm install
 
 npm start
