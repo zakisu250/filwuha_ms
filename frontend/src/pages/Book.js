@@ -17,6 +17,7 @@ function Book() {
     '03:00 PM - 04:00 PM',
     '04:00 PM - 05:00 PM',
   ];
+
   const [reservedSlots, setReservedSlots] = useState({});
   const [formData, setFormData] = useState({
     firstName: '',
@@ -31,12 +32,16 @@ function Book() {
   const [isLoading, setIsLoading] = useState(false);
 
   const filterUnavailableSlots = () => {
+    // Get the slots reserved for the selected date
     const selectedDateSlots = reservedSlots[formData.orderDate];
+    // Find the index of the selected time in the timeIntervals array
     const selectedTimeIndex = timeIntervals.findIndex((time) =>
       time.includes(formData.orderTime)
     );
 
+    // If slots are reserved for the selected date and the selected time is valid
     if (selectedDateSlots && selectedTimeIndex !== -1) {
+      // Get the slots that are unavailable at the selected time
       const unavailableSlots = selectedDateSlots
         .filter(
           (slotInfo) =>
@@ -44,11 +49,13 @@ function Book() {
         )
         .map((slotInfo) => slotInfo.slot);
 
+      // Return the slots that are not in the unavailableSlots array
       return [1, 2, 3, 4, 5, 6].filter(
         (slot) => !unavailableSlots.includes(slot)
       );
     }
 
+    // If no slots are reserved for the selected date or the selected time is not valid, return all slots
     return [1, 2, 3, 4, 5, 6];
   };
 
@@ -61,71 +68,99 @@ function Book() {
   lastDate = lastDate.toISOString().split('T')[0];
 
   useEffect(() => {
+    // Define an async function to fetch reserved slots
     const fetchReservedSlots = async () => {
       try {
+        // Call the checkReservedSlots function with formData and await its response
         const response = await checkReservedSlots(formData);
+        // Set the reservedSlots state with the response
         setReservedSlots(response);
       } catch (error) {
+        // If an error occurs, log the error, set the reservedSlots state to an empty object, and set the message state with the error
         console.error(error);
         setReservedSlots({});
         setMessage(error);
       }
     };
+    // Call the fetchReservedSlots function
     fetchReservedSlots();
-  }, [formData]);
+  }, [formData]); // Run this effect whenever formData changes
 
+  // Handle when the inputs change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const validateFormData = (data) => {
+    // Define a regex pattern for phone numbers
     const phoneRegex = /^(07|09)\d{8}$/;
+
+    // Validate the firstName field
     if (!data.firstName || data.firstName.length < 3) {
       setMessage('First name must be at least 4 characters long');
       setErrorField('firstName');
       return false;
     }
+
+    // Validate the lastName field
     if (!data.lastName || data.lastName.length < 3) {
       setMessage('Last name must be at least 4 characters long');
       setErrorField('lastName');
       return false;
     }
+
+    // Validate the phone field length
     if (!data.phone || data.phone.length < 10) {
       setMessage('Phone number must be at least 10 characters long');
       setErrorField('phone');
       return false;
     }
+
+    // Validate the phone field format
     if (!phoneRegex.test(data.phone)) {
       setMessage('Invalid phone number');
       setErrorField('phone');
       return false;
     }
+
+    // Check if lastName and phone fields are not empty
     if (!data.lastName || !data.phone) {
       setMessage('Error input data');
       return false;
     }
+
+    // If all validations pass, reset the error field and return true
     setErrorField('');
     return true;
   };
 
   const handleSubmit = (e) => {
+    // Prevent the default form submission behavior
     e.preventDefault();
+    // Set the isLoading state to true to indicate that a request is being made
     setIsLoading(true);
     try {
+      // Validate the formData
       if (validateFormData(formData)) {
+        // If the formData is valid, format the formData
         const formattedFormData = {
           ...formData,
+          // Convert the orderTime to a format that includes the hour and zero minutes
           orderTime: `${formData.orderTime.split(' ')[0]}:00`,
         };
+        // Navigate to the /payment route with the formattedFormData as state
         navigate('/payment', { state: formattedFormData });
       } else {
+        // If the formData is not valid, set the message state with an error message
         setMessage(`Invalid ${errorField}`);
       }
     } catch (error) {
+      // If an error occurs, log the error and set the message state with an error message
       console.error('Error submitting form:', error);
       setMessage('Error submitting form. Please try again.');
     } finally {
+      // Set the isLoading state to false to indicate that the request has finished
       setIsLoading(false);
     }
   };

@@ -4,6 +4,13 @@ import { toast } from 'react-toastify';
 import { loginAdmin } from '../apis/utils';
 import { useNavigate } from 'react-router';
 
+/**
+ * Represents the Admin Login component.
+ *
+ * @component
+ * @returns {JSX.Element} The JSX element representing the Admin Login component.
+ */
+
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -11,6 +18,13 @@ const AdminLogin = () => {
 
   const navigate = useNavigate();
 
+  /**
+   *
+   * @param {e} event
+   * Checks for localStorage token and redirects the admin to home page
+   * If there is error, a toast is shown
+   * Finally handles the loading process to false
+   */
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);

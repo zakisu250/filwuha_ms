@@ -13,6 +13,7 @@ export default function Receipt() {
   const location = useLocation();
   const formData = location.state;
 
+  // Generate a document to be downloaded by the customer after a successful payment
   const MyDocument = () => (
     <Document>
       <Page style={styles.page}>

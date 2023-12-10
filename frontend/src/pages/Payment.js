@@ -18,6 +18,7 @@ function Payment() {
     orderTime: order_time,
     slot: slot_number,
   } = formData;
+
   const [paymentStatus, setPaymentStatus] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -25,10 +26,14 @@ function Payment() {
   const [message, setMessage] = useState(false);
 
   const handlePay = async (e) => {
+    // Prevent the default form submission behavior
     e.preventDefault();
+    // Set the isLoading state to true to indicate that a request is being made
     setIsLoading(true);
+    // Check if the user is not already in the process of paying
     if (!isPaying) {
       try {
+        // Call the createOrder function with the order details and await its response
         const data = await createOrder({
           first_name,
           last_name,
@@ -40,6 +45,7 @@ function Payment() {
           price: 100,
           payment: false,
         });
+        // If the payment is not successful, set the paymentStatus state to false, set the paymentId state with the order_id from the response, set the isPaying state to true, and display an info toast with the message from the response
         if (!data?.payment) {
           setPaymentStatus(false);
           setPaymentId(data?.order_id);
@@ -55,26 +61,34 @@ function Payment() {
             theme: 'light',
           });
         } else {
+          // If the payment is successful, set the paymentStatus state to true and set the isPaying state to false
           setPaymentStatus(true);
           setIsPaying(false);
         }
+        // Set the isLoading state to false to indicate that the request has finished
         setIsLoading(false);
       } catch (error) {
+        // If an error occurs, set the isPaying state to false, set the isLoading state to false, and set the message state with the error message
         setIsPaying(false);
         setIsLoading(false);
         setMessage(error.message);
       }
     } else {
+      // If the user is already in the process of paying, call the handleCheck function and set the isLoading state to false
       handleCheck();
       setIsLoading(false);
     }
+    // Set the isLoading state to false to indicate that the request has finished
     setIsLoading(false);
   };
 
   const handleCheck = async () => {
     try {
+      // Call the checkPaymentStatus function with the paymentId and await its response
       const data = await checkPaymentStatus(paymentId);
+      // If the response is truthy
       if (data) {
+        // Set the paymentStatus state to true, set the isPaying state to false, display a success toast with the message from the response, and navigate to the /receipt route with the formData as state
         setPaymentStatus(true);
         setIsPaying(false);
         toast.success(data.message, {
@@ -89,11 +103,13 @@ function Payment() {
         });
         navigate('/receipt', { state: formData });
       } else {
+        // If the response is falsy, set the paymentStatus state to false, set the isPaying state to true, and set the message state with the message from the response
         setPaymentStatus(false);
         setIsPaying(true);
         setMessage(data.message);
       }
     } catch (error) {
+      // If an error occurs, set the message state with the error message
       setMessage(error.message);
     }
   };

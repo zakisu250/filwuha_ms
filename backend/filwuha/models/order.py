@@ -2,8 +2,10 @@ from filwuha.models import db
 
 
 class Order(db.Model):
+    # Define the table name
     __tablename__ = "orders"
 
+    # Define the table columns
     order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     first_name = db.Column(db.String(45), nullable=False)
     last_name = db.Column(db.String(45), nullable=False)
@@ -27,6 +29,7 @@ class Order(db.Model):
         price,
         payment,
     ):
+        # Initialize an Order object with the provided arguments
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
@@ -38,6 +41,7 @@ class Order(db.Model):
         self.payment = payment
 
     def serialize(self):
+        # Return a dictionary representation of the Order object
         return {
             "order_id": self.order_id,
             "first_name": self.first_name,

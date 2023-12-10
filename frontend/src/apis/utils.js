@@ -4,6 +4,7 @@ const LOGIN_URL = 'https://filwuha-api.onrender.com/api/v1/admin/login';
 const CHECK_SLOTS_URL =
   'https://filwuha-api.onrender.com/api/v1/reserved_slots';
 
+// API GET request to fetch all reserved slots
 export async function checkReservedSlots() {
   try {
     const response = await axios.get(CHECK_SLOTS_URL);
@@ -19,6 +20,7 @@ export async function checkReservedSlots() {
   }
 }
 
+//API POST request to create an order
 export default async function createOrder(oData) {
   try {
     const response = await axios.post(
@@ -53,6 +55,7 @@ export default async function createOrder(oData) {
   }
 }
 
+// API GET request to check the status payment
 export async function checkPaymentStatus(paymentId) {
   try {
     const response = await axios.get(`${BASE_URL}/book/${paymentId}`);
@@ -67,6 +70,7 @@ export async function checkPaymentStatus(paymentId) {
   }
 }
 
+// Authorization POST API request
 export async function loginAdmin(adminData) {
   const response = await axios.post(LOGIN_URL, adminData, {
     headers: {
@@ -87,6 +91,7 @@ export async function loginAdmin(adminData) {
   }
 }
 
+// Admin Route to fetch orders made by customers
 export async function fetchOrders() {
   try {
     const response = await axios.get(`${BASE_URL}/admin/orders`);
@@ -102,6 +107,7 @@ export async function fetchOrders() {
   }
 }
 
+// Admin Route to update orders
 export async function updateOrder(orderId, updatedDetails) {
   try {
     const response = await axios.put(
@@ -125,6 +131,7 @@ export async function updateOrder(orderId, updatedDetails) {
   }
 }
 
+// Admin Route to delete orders
 export async function deleteOrder(orderId) {
   try {
     const response = await axios.delete(`${BASE_URL}/admin/orders/${orderId}`);

@@ -19,6 +19,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* This code defines the routes and components for the application using React Router. */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="services" element={<Services />} />
@@ -28,10 +29,12 @@ function App() {
           <Route path="payment" element={<Payment />} />
           <Route path="receipt" element={<Receipt />} />
         </Route>
+        {/* Admin and Admin routes are protected */}
         <Route path="admin">
           <Route index element={<AdminLogin />} />
           <Route path="home" element={<AdminPage />} />
         </Route>
+        {/* Pages not found and unauthorized routes */}
         <Route path="unauthorized" element={<Unauthorized />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

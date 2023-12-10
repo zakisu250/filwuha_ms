@@ -28,39 +28,55 @@ const AdminPage = () => {
   const [userData, setUserData] = useState(null);
 
   const token = localStorage.getItem('token');
+
   useEffect(() => {
     try {
+      // If a token exists
       if (token) {
+        // Decode the token
         const decodedToken = jwt_decode(token);
+        // Extract the username from the decoded token
         const userRole = decodedToken.sub.username;
+        // Check if the username is either 'zaki' or 'admin'
         const isValidUserRole = ['zaki', 'admin'].includes(userRole);
 
+        // If the username is valid, set the user data
         if (isValidUserRole) {
           setUserData(userRole);
         }
       } else {
+        // If no token exists, set the user data to null and redirect to the admin page
         setUserData(null);
         window.location.href = '/admin';
       }
     } catch (error) {
+      // If an error occurs, log the error, set the user data to null, and redirect to the unauthorized page
       console.error('Error checking user role:', error);
       setUserData(null);
       window.location.href = '/unauthorized';
     }
-  }, [token]);
+  }, [token]); // Run this effect whenever the token changes
 
   useEffect(() => {
+    // Define an async function to fetch orders
     const fetchData = async function () {
+      // Call the fetchOrders function and await its response
       const response = await fetchOrders();
+      // Log the response
       console.log(response);
+      // Set the orders state with the Orders from the response
       setOrders(response.Orders);
     };
+    // Call the fetchData function
     fetchData();
-  }, [confirmDelete, updatedOrderDetails]);
+  }, [confirmDelete, updatedOrderDetails]); // Run this effect whenever confirmDelete or updatedOrderDetails changes
 
   const handleUpdateOrder = (orderId) => {
+    // Set the editingOrder state with the provided orderId
     setEditingOrder(orderId);
+    // Find the order with the provided orderId in the orders state
     const order = orders.find((order) => order.order_id === orderId);
+    // Set the updatedOrderDetails state with the details of the found order
     setUpdatedOrderDetails({
       first_name: order.first_name,
       last_name: order.last_name,
@@ -70,21 +86,27 @@ const AdminPage = () => {
       order_time: order.order_time,
       slot_number: order.slot_number,
       price: order.price,
-      payment: order.payment === true ? '1' : '0',
+      payment: order.payment === true ? '1' : '0', // Convert the payment boolean to a string
     });
   };
 
   const confirmUpdateOrder = async (orderId) => {
+    // Set the isLoading state to true to indicate that a request is being made
     setIsLoading(true);
     try {
+      // Call the updateOrder function with the orderId and updatedOrderDetails and await its response
       const data = await updateOrder(orderId, updatedOrderDetails);
+      // Create a new array of orders where the order with the provided orderId is replaced with its updated details
       const updatedOrders = orders.map((order) =>
         order.order_id === orderId
           ? { ...order, ...updatedOrderDetails }
           : order
       );
+      // Set the orders state with the new array of orders
       setOrders(updatedOrders);
+      // Reset the editingOrder state to null
       setEditingOrder(null);
+      // Display a success toast with the message from the response
       toast.success(data.message, {
         position: 'top-center',
         autoClose: 5000,
@@ -96,22 +118,30 @@ const AdminPage = () => {
         theme: 'light',
       });
     } catch (error) {
+      // If an error occurs, log the error
       console.error('Error updating order:', error);
+      // Rethrow the error
       throw error;
     } finally {
+      // Set the isLoading state to false to indicate that the request has finished
       setIsLoading(false);
     }
   };
 
+  // Handle when the delete button is clicked
   const handleDeleteOrder = (orderId) => {
     setConfirmDelete(orderId);
   };
 
   const confirmDeleteOrder = async (orderId) => {
     try {
+      // Call the deleteOrder function with the orderId and await its response
       const data = await deleteOrder(orderId);
+      // Create a new array of orders that does not include the order with the provided orderId
       setOrders(orders.filter((order) => order.order_id !== orderId));
+      // Reset the confirmDelete state to null
       setConfirmDelete(null);
+      // Display a success toast with the message from the response
       toast.success(data.message, {
         position: 'top-center',
         autoClose: 5000,
@@ -123,7 +153,9 @@ const AdminPage = () => {
         theme: 'light',
       });
     } catch (error) {
+      // If an error occurs, log the error
       console.error('Error deleting order:', error);
+      // Rethrow the error
       throw error;
     }
   };
