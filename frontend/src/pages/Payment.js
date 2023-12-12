@@ -91,16 +91,8 @@ function Payment() {
         // Set the paymentStatus state to true, set the isPaying state to false, display a success toast with the message from the response, and navigate to the /receipt route with the formData as state
         setPaymentStatus(true);
         setIsPaying(false);
-        toast.success(data.message, {
-          position: 'top-center',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: 'light',
-        });
+        toast.success(data.message);
+        localStorage.setItem('data', JSON.stringify(formData));
         navigate('/receipt', { state: formData });
       } else {
         // If the response is falsy, set the paymentStatus state to false, set the isPaying state to true, and set the message state with the message from the response
@@ -184,7 +176,7 @@ function Payment() {
           {isLoading ? (
             <img src={LoadingSVG} alt="Loading" className="w-6 h-6 inline" />
           ) : isPaying ? (
-            'Proceed with payment'
+            'Check payment status'
           ) : (
             'Pay'
           )}

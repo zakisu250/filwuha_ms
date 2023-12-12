@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   Document,
@@ -11,7 +11,7 @@ import {
 
 export default function Receipt() {
   const location = useLocation();
-  const formData = location.state;
+  const formData = location.state || JSON.parse(localStorage.getItem('data'));
 
   // Generate a document to be downloaded by the customer after a successful payment
   const MyDocument = () => (
@@ -48,6 +48,10 @@ export default function Receipt() {
       flexGrow: 1,
     },
   });
+
+  useEffect(() => {
+    localStorage.setItem('data', JSON.stringify(formData));
+  }, [formData]);
 
   return (
     <div className="receipt">

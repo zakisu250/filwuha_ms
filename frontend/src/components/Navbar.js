@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import Notification from './Notification';
 
 function Navbar() {
   const location = useLocation();
@@ -15,7 +16,10 @@ function Navbar() {
         <Link to="/" className="flex items-center py-3 px-8">
           <h1 className="text-4xl font-bold text-blue-950">FILEWUHA</h1>
         </Link>
-        <ul className="flex space-x-4" id="menu">
+        <ul className="flex items-center gap-1 relative" id="menu">
+          <li className="mr-2 absolute -left-10 top-1 hover:bg-blue-300 rounded-full">
+            <Notification />
+          </li>
           <li>
             <Link
               to="/"
