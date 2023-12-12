@@ -49,6 +49,7 @@ export default function Receipt() {
     },
   });
 
+  // Added the formData to the localStorage to be used in the notification
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(formData));
   }, [formData]);

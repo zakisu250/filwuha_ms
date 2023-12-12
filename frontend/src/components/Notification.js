@@ -7,6 +7,8 @@ const Notification = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
+
+  // Retrieve the formData from the localStorage to be used in the receipt
   useEffect(() => {
     document.addEventListener('click', (e) => {
       if (!e.target.closest('#menu')) {
