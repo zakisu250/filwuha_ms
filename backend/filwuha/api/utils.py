@@ -1,3 +1,4 @@
+from flask import request, abort
 import jwt
 import datetime
 from decouple import config
